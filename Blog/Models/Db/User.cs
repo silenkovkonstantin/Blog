@@ -9,5 +9,11 @@ namespace Blog.Models.Db
         /// </summary>
         public string ImageUrl { get; set; }
         public Role Role { get; set; }
+
+        public User()
+        {
+            Role.Id = 1;
+            Role.Name = "Пользователь";
+        }
     }
 }

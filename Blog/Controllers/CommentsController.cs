@@ -88,43 +88,38 @@ namespace Blog.Controllers
 
         [Route("Delete")]
         [HttpPost]
-        public async Task<IActionResult> Delete(int id, PostsViewModel postsvm)
+        public async Task<IActionResult> Delete(int id, CommentsViewModel commentsvm)
         {
             var currentuser = User;
-            var result = await _userManager.GetUserAsync(currentuser);
-            var postsRepository = _unitOfWork.GetRepository<Post>() as PostsRepository;
-            var commentsRepository = _unitOfWork.GetRepository<Comment>() as CommentsRepository;
+            var user = await _userManager.GetUserAsync(currentuser);
+            var repository = _unitOfWork.GetRepository<Comment>() as CommentsRepository;
 
-            var post = await postsRepository.GetAsync(id);
+            var comment = await repository.GetAsync(id);
+            await repository.DeleteAsync(comment);
+            var comments = await repository.GetAllPostCommentsAsync(comment.PostId);
 
-            foreach (var comment in post.Comments)
-                await commentsRepository.DeleteAsync(comment);
-
-            await postsRepository.DeleteAsync(post);
-            var posts = await postsRepository.GetAllAsync();
-
-            var model = new PostsViewModel()
+            var model = new CommentsViewModel()
             {
-                Posts = posts.OrderBy(x => x.CreatedDate).ToList(),
+                Comments = comments.OrderBy(x => x.CreatedDate).ToList(),
             };
 
-            return View("Posts", model);
+            return View("Comments", model);
         }
 
-        private async Task<List<Post>> GetAllPosts()
+        private async Task<List<Comment>> GetAllComments()
         {
-            var repository = _unitOfWork.GetRepository<Post>() as PostsRepository;
-            var posts = await repository.GetAllAsync();
+            var repository = _unitOfWork.GetRepository<Comment>() as CommentsRepository;
+            var comments = await repository.GetAllAsync();
 
-            return posts.ToList();
+            return comments.ToList();
         }
 
-        private async Task<List<Post>> GetAllPosts(User user)
+        private async Task<Comment> GetComment(int id)
         {
-            var repository = _unitOfWork.GetRepository<Post>() as PostsRepository;
-            var posts = repository.GetAllUserPostsAsync(user.Id);
+            var repository = _unitOfWork.GetRepository<Comment>() as CommentsRepository;
+            var comment = await repository.GetAsync(id);
 
-            return await posts;
+            return comment;
         }
     }
 }
