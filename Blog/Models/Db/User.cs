@@ -8,12 +8,6 @@ namespace Blog.Models.Db
         /// Модель пользователя
         /// </summary>
         public string ImageUrl { get; set; }
-        public Role Role { get; set; }
-
-        public User()
-        {
-            Role.Id = 1;
-            Role.Name = "Пользователь";
-        }
+        public List<Role> Roles { get; set; }
     }
 }

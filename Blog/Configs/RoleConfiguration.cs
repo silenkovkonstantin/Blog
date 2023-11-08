@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Blog.Configs
 {
-    public class CommentConfuiguration : IEntityTypeConfiguration<Comment>
+    public class RoleConfiguration : IEntityTypeConfiguration<Role>
     {
-        public void Configure(EntityTypeBuilder<Comment> builder)
+        public void Configure(EntityTypeBuilder<Role> builder)
         {
-            builder.ToTable("UserComments").HasKey(p => p.Id);
+            builder.ToTable("Roles").HasKey(p => p.Id);
             //builder.Property(x => x.Id).UseIdentityColumn();
         }
     }

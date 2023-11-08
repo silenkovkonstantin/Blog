@@ -9,7 +9,7 @@ namespace Blog.Configs
         public void Configure(EntityTypeBuilder<Tag> builder)
         {
             builder.ToTable("PostTags").HasKey(p => p.Id);
-            builder.Property(x => x.Id).UseIdentityColumn();
+            //builder.Property(x => x.Id).UseIdentityColumn();
         }
     }
 }

@@ -15,6 +15,8 @@ namespace Blog.Data
 
         public DbSet<Tag> PostTags { get; set; }
 
+        public DbSet<Role> Roles { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
             Database.EnsureCreated();
@@ -28,6 +30,7 @@ namespace Blog.Data
             builder.ApplyConfiguration(new PostConfiguration());
             builder.ApplyConfiguration(new CommentConfuiguration());
             builder.ApplyConfiguration(new TagConfuiguration());
+            builder.ApplyConfiguration(new RoleConfiguration());
         }
     }
 }

@@ -3,9 +3,12 @@ using Blog.Data.UoW;
 using Blog.Extensions;
 using Blog.Models.Db;
 using Blog.ViewModels;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Blog.Controllers
 {
@@ -81,6 +84,19 @@ namespace Blog.Controllers
 
                 if (result.Succeeded)
                 {
+                    var claims = new List<Claim>()
+                    {
+                        new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
+                        new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Roles.OrderBy(r => r.Name).First().Name)
+                        // Роли в списке сортируются в порядке: Администратор, Модератор, Пользователь.
+                        // Первая в списке всегда с максимальными правами.
+                    };
+
+                    var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
+                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+
                     return RedirectToAction("MyPage", "AccountManager");
                 }
                 else
@@ -97,7 +113,7 @@ namespace Blog.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
 

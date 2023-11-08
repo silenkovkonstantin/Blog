@@ -45,8 +45,22 @@ namespace Blog
                     //opts.ClaimsIdentit
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-                
 
+            services.AddAuthentication(options => options.DefaultScheme = "Cookies")
+                .AddCookie("Cookies", options =>
+                {
+                    options.Events = new Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationEvents
+                    {
+                        OnRedirectToLogin = RedirectContext =>
+                        {
+                            RedirectContext.HttpContext.Response.StatusCode = 401;
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
+
+            services.AddAuthorization();
+            services.AddMvc();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
