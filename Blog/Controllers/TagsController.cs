@@ -3,6 +3,7 @@ using Blog.Data.Repository;
 using Blog.Data.UoW;
 using Blog.Models.Db;
 using Blog.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +24,7 @@ namespace Blog.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        [Authorize(Roles = "Администратор")]
         [Route("Tags")]
         [HttpPost]
         public async Task<IActionResult> Tags()
@@ -37,6 +39,7 @@ namespace Blog.Controllers
             return View("Tags", model);
         }
 
+        [Authorize(Roles = "Администратор")]
         [Route("NewTag")]
         [HttpPost]
         public async Task<IActionResult> NewTag(TagsViewModel tagsvm)
@@ -61,6 +64,7 @@ namespace Blog.Controllers
             return View("Tags", model);
         }
 
+        [Authorize(Roles = "Администратор")]
         [Route("Update")]
         [HttpPost]
         public async Task<IActionResult> Update(int id, TagsViewModel tagsvm)
@@ -83,6 +87,7 @@ namespace Blog.Controllers
             return View("Tags", model);
         }
 
+        [Authorize(Roles = "Администратор")]
         [Route("Delete")]
         [HttpPost]
         public async Task<IActionResult> Delete(int id, TagsViewModel tagsvm)

@@ -1,13 +1,15 @@
 ﻿using Blog.Configs;
 using Blog.Models.Db;
+//using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Blog.Data
 {
-    public sealed class ApplicationDbContext : IdentityDbContext<User>
+    public sealed class ApplicationDbContext : IdentityDbContext<User, Role, string>
     {
-        public DbSet<User> Users { get; set; }
+        //public DbSet<User> Users { get; set; }
 
         public DbSet<Post> UserPosts { get; set; }
 
@@ -15,10 +17,11 @@ namespace Blog.Data
 
         public DbSet<Tag> PostTags { get; set; }
 
-        public DbSet<Role> Roles { get; set; }
+        //public DbSet<Role> Roles { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
+            //Database.EnsureDeleted();
             Database.EnsureCreated();
             //Database.Migrate();
         }
@@ -30,7 +33,7 @@ namespace Blog.Data
             builder.ApplyConfiguration(new PostConfiguration());
             builder.ApplyConfiguration(new CommentConfuiguration());
             builder.ApplyConfiguration(new TagConfuiguration());
-            builder.ApplyConfiguration(new RoleConfiguration());
+            //builder.ApplyConfiguration(new RoleConfiguration());
         }
     }
 }

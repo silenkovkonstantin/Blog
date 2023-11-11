@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Blog.Data;
 
 namespace Blog.Controllers
 {
@@ -27,6 +28,27 @@ namespace Blog.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        
+        [Route("Generate")]
+        [HttpGet]
+        public async Task<IActionResult> Generate()
+        {
+
+            var usergen = new GenetateUsers();
+            var userlist = usergen.Populate();
+
+            foreach (var user in userlist)
+            {
+                var result = await _userManager.CreateAsync(user, "123456");
+
+                if (!result.Succeeded)
+                    continue;
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize(Roles = "Администратор")]
         [Route("Login")]
         [HttpGet]
         public IActionResult Login()
@@ -34,6 +56,7 @@ namespace Blog.Controllers
             return View("Home/Login");
         }
 
+        [Authorize(Roles = "Администратор")]
         [Route("Edit")]
         [HttpGet]
         public IActionResult Edit()
@@ -45,7 +68,7 @@ namespace Blog.Controllers
             return View("Edit", editmodel);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Администратор")]
         [Route("Update")]
         [HttpPost]
         public async Task<IActionResult> Update(UserEditViewModel model)
@@ -72,6 +95,7 @@ namespace Blog.Controllers
             }
         }
 
+        [Authorize(Roles = "Администратор")]
         [Route("Login")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -108,6 +132,7 @@ namespace Blog.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [Authorize(Roles = "Администратор")]
         [Route("Logout")]
         [HttpPost]
         [ValidateAntiForgeryToken]

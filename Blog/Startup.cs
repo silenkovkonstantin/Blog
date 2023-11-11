@@ -22,7 +22,7 @@ namespace Blog
 
         public void ConfigureServices(IServiceCollection services)
         {
-            string connection = Configuration.GetConnectionString("DefaultConnecton");
+            //string connection = Configuration.GetConnectionString("DefaultConnecton");
             var mapperConfig = new MapperConfiguration((v) =>
             {
                 v.AddProfile(new MappingProfile());
@@ -30,7 +30,7 @@ namespace Blog
             IMapper mapper = mapperConfig.CreateMapper();
 
             services.AddSingleton(mapper)
-                .AddDbContext<ApplicationDbContext>(options => options.UseSqlite(connection))
+                .AddDbContext<ApplicationDbContext>(options => options.UseSqlite($"Data Source={_env.ContentRootPath}/BlogDb.db"))
                 .AddUnitOfWork()
                 .AddCustomRepository<Post, PostsRepository>()
                 .AddCustomRepository<Comment, CommentsRepository>()

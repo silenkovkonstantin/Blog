@@ -2,6 +2,7 @@
 using Blog.Data.Repository;
 using Blog.Models.Db;
 using Blog.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks.Dataflow;
@@ -21,6 +22,7 @@ namespace Blog.Controllers
             _signInManager = signInManager;
         }
 
+        [Authorize(Roles = "Администратор")]
         [Route("Register")]
         [HttpGet]
         public IActionResult Register()
@@ -28,6 +30,7 @@ namespace Blog.Controllers
             return View("Home/Register");
         }
 
+        [Authorize(Roles = "Администратор")]
         [Route("Register")]
         [HttpPost]
         private async Task<IActionResult> Register(RegisterViewModel model)

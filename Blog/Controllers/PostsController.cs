@@ -4,6 +4,7 @@ using Blog.Data.UoW;
 using Blog.Extensions;
 using Blog.Models.Db;
 using Blog.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,7 @@ namespace Blog.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        [Authorize(Roles = "Администратор")]
         [Route("Posts")]
         [HttpPost]
         public async Task<IActionResult> Posts()
@@ -39,6 +41,7 @@ namespace Blog.Controllers
             return View("Posts", model);
         }
 
+        [Authorize(Roles = "Администратор")]
         [Route("NewPost")]
         [HttpPost]
         public async Task<IActionResult> NewPost(PostsViewModel postsvm)
@@ -66,6 +69,7 @@ namespace Blog.Controllers
             return View("Posts", model);
         }
 
+        [Authorize(Roles = "Администратор")]
         [Route("Update")]
         [HttpPost]
         public async Task<IActionResult> Update(int id, PostsViewModel postsvm)
@@ -90,6 +94,7 @@ namespace Blog.Controllers
             return View("Posts", model);
         }
 
+        [Authorize(Roles = "Администратор")]
         [Route("Delete")]
         [HttpPost]
         public async Task<IActionResult> Delete(int id, PostsViewModel postsvm)

@@ -1,11 +1,12 @@
-﻿namespace Blog.Models.Db
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace Blog.Models.Db
 {
-    public class Role
+    public class Role : IdentityRole
     {
         /// <summary>
         /// Модель пользовательской роли
         /// </summary>
-        public int Id { get; set; }
-        public string Name { get; set; }
+        //public string UserId { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using Blog.Data.Repository;
 using Blog.Data.UoW;
 using Blog.Models.Db;
 using Blog.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Protocol.Core.Types;
@@ -24,6 +25,7 @@ namespace Blog.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        [Authorize(Roles = "Администратор")]
         [Route("Comments")]
         [HttpPost]
         public async Task<IActionResult> Comments()
@@ -38,6 +40,7 @@ namespace Blog.Controllers
             return View("Comments", model);
         }
 
+        [Authorize(Roles = "Администратор")]
         [Route("NewComment")]
         [HttpPost]
         public async Task<IActionResult> NewComment(int postid, CommentsViewModel commentsvm)
@@ -64,6 +67,7 @@ namespace Blog.Controllers
             return View("Comments", model);
         }
 
+        [Authorize(Roles = "Администратор")]
         [Route("Update")]
         [HttpPost]
         public async Task<IActionResult> Update(int id, CommentsViewModel commentsvm)
@@ -86,6 +90,7 @@ namespace Blog.Controllers
             return View("Comments", model);
         }
 
+        [Authorize(Roles = "Администратор")]
         [Route("Delete")]
         [HttpPost]
         public async Task<IActionResult> Delete(int id, CommentsViewModel commentsvm)
