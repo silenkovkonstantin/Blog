@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Blog.Data.UoW;
 using Blog.Extensions;
-using Blog.Models.Db;
+using Blog.Data.Models.Db;
 using Blog.ViewModels;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;

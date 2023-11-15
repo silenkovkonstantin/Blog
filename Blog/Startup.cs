@@ -2,7 +2,7 @@
 using Blog.Data;
 using Blog.Data.Repository;
 using Blog.Extensions;
-using Blog.Models.Db;
+using Blog.Data.Models.Db;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -68,6 +68,11 @@ namespace Blog
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseHsts();
             }
 
             app.UseRouting();

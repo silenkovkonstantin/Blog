@@ -25,5 +25,7 @@ namespace Blog.ViewModels
         [DataType(DataType.Password)]
         [Display(Name = "Подтверждение пароля", Prompt = "Повторно введите пароль")]
         public string PasswordConfirm { get; set; }
+
+        public string ImageUrl { get; set; }
     }
 }

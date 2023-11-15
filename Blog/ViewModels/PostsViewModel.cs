@@ -1,4 +1,4 @@
-﻿using Blog.Models.Db;
+﻿using Blog.Data.Models.Db;
 
 namespace Blog.ViewModels
 {

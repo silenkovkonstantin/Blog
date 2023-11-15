@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Blog.Models.Db;
+using Blog.Data.Models.Db;
 using Blog.ViewModels;
 
 namespace Blog
@@ -10,6 +10,13 @@ namespace Blog
         {
             CreateMap<User, UserViewModel>()
                 .ConstructUsing(v => new UserViewModel(v));
+            CreateMap<IEnumerable<User>, UserViewModel>();
+            CreateMap<IEnumerable<Post>, PostsViewModel>();
+            CreateMap<PostsViewModel, Post>();
+            CreateMap<IEnumerable<Comment>, CommentsViewModel>();
+            CreateMap<CommentsViewModel, Comment>();
+            CreateMap<IEnumerable<Tag>, TagsViewModel>();
+            CreateMap<TagsViewModel, Tag>();
         }
     }
 }

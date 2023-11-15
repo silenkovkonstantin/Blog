@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
-using Blog.Data.Repository;
-using Blog.Models.Db;
+using Blog.Data.Models.Db;
 using Blog.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -33,7 +32,7 @@ namespace Blog.Controllers
         [Authorize(Roles = "Администратор")]
         [Route("Register")]
         [HttpPost]
-        private async Task<IActionResult> Register(RegisterViewModel model)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
