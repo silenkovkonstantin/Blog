@@ -2,7 +2,6 @@
   "profiles": {
     "Blog": {
       "commandName": "Project",
-      "workingDirectory": "C:\\VS_Projects\\Blog\\Blog",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
