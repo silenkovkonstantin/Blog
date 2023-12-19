@@ -29,7 +29,9 @@ namespace Blog.UnitTests.Controllers
         [Fact]
         public void Posts_ActionExecutes_ReturnsViewForPosts()
         {
+            // Act
             var result = _controller.Posts();
+            // Assert
             Assert.IsType<ViewResult>(result);
         }
     }

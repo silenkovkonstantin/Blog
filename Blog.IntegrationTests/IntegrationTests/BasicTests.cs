@@ -20,10 +20,13 @@ namespace Blog.IntegrationTests.IntegrationTests
         [InlineData("/Tags")]
         public async Task Get_EndPointsReturnSuccessAndCorrectType(string url)
         {
+            // Arrange
             var client = _factory.CreateClient();
 
+            // Act
             var response = await client.GetAsync(url);
 
+            // Assert
             response.EnsureSuccessStatusCode();
             Assert.Equal("text/html; charset=utf-8",
                 response.Content.Headers.ContentType.ToString());

@@ -27,7 +27,9 @@ namespace Blog.UnitTests.Controllers
         [Fact]
         public void Tags_ActionExecutes_ReturnsViewForTags()
         {
+            // Act
             var result = _controller.Tags();
+            // Assert
             Assert.IsType<ViewResult>(result);
         }
     }

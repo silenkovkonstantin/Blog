@@ -25,8 +25,9 @@ namespace Blog.IntegrationTests.IntegrationTests
         [Fact]
         public async Task GetUsersUnauthrizedShouldReturn401()
         {
+            // Act
             var response = await _client.GetAsync("/Users");
-            
+            // Assert
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
 
@@ -44,13 +45,13 @@ namespace Blog.IntegrationTests.IntegrationTests
         [Fact]
         public async Task CanGetUsers()
         {
+            // Arrange
             List<string> expectedResponse = new List<string> { "patrickbateman", "ryangosling", "jasonstatham" };
-
+            //Act
             await PerformLogin("patrickbateman", "123456");
-
             var responseJson = await _client.GetStringAsync("/Users");
             List<string> actualResponse = JsonConvert.DeserializeObject<List<string>>(responseJson);
-
+            // Assert
             Assert.Equal(expectedResponse, actualResponse);
         }
     }

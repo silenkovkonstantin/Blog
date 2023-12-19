@@ -24,19 +24,20 @@ namespace Blog.IntegrationTests.IntegrationTests
         [Fact]
         public async Task Register_WhenCalled_ReturnsRegisterForm()
         {
+            // Arrange
             var response = await _client.GetAsync("/Register/Register");
             response.EnsureSuccessStatusCode();
-
+            // Act
             var responseString = await response.Content.ReadAsStringAsync();
-
+            // Assert
             Assert.Contains("Добавьте нового пользователя", responseString);
         }
 
         [Fact]
         public async Task Register_SentWrongModel_ReturnsViewWithErrorMessages()
         {
+            // Arrange
             var postRequest = new HttpRequestMessage(HttpMethod.Post, "Register/Register");
-
             var formModel = new Dictionary<string, string>
             {
                 { "Login", "new_user"},
@@ -45,22 +46,20 @@ namespace Blog.IntegrationTests.IntegrationTests
                 { "PasswordConfirm", "456" },
                 { "ImageUrl", "https://i.pinimg.com/originals/5c/9c/36/5c9c363f068fd9808161e711257b0946.jpg" }
             };
-
             postRequest.Content = new FormUrlEncodedContent(formModel);
-
+            // Act
             var response = await _client.SendAsync(postRequest);
             response.EnsureSuccessStatusCode();
-
             var responseString = await response.Content.ReadAsStringAsync();
-
+            // Assert
             Assert.Contains("Пароли не совпадают", responseString);
         }
 
         [Fact]
         public async Task Register_WhenPOSTExecuted_ReturnsToIndexViewWithRegisteredUser()
         {
+            // Arrange
             var postRequest = new HttpRequestMessage(HttpMethod.Post, "Register/Register");
-
             var formModel = new Dictionary<string, string>
             {
                 { "Login", "new_user"},
@@ -69,14 +68,12 @@ namespace Blog.IntegrationTests.IntegrationTests
                 { "PasswordConfirm", "123" },
                 { "ImageUrl", "https://i.pinimg.com/originals/5c/9c/36/5c9c363f068fd9808161e711257b0946.jpg" }
             };
-
             postRequest.Content = new FormUrlEncodedContent(formModel);
-
+            // Act
             var response = await _client.SendAsync(postRequest);
             response.EnsureSuccessStatusCode();
-
             var responseString = await response.Content.ReadAsStringAsync();
-
+            // Assert
             Assert.Contains("Welcome", responseString);
         }
     }

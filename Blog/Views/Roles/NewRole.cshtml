@@ -1,0 +1,32 @@
+﻿@model Blog.ViewModels.RoleViewModel
+@{
+    ViewBag.Title = "Signin";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<h4 class="mb-3">Добавление роли</h4>
+<form asp-controller="Roles" asp-action="NewRole">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="row g-3">
+        <div class="col-12">
+            <label class="form-label">Название</label>
+            <input asp-for="Role.Name" type="text" class="form-control" placeholder="Модератор" required />
+            <span asp-validation-for="Role.Name" class="text-danger"></span>
+            <div class="invalid-feedback">
+                " Введите название"
+            </div>
+        </div>
+        <div class="col-12">
+            <label class="form-label">Описание</label>
+            <textarea asp-for="Role.Description" placeholder="Модератор имеет доступ к редактированию статей и комментариев" value required />
+            <div class="invalid-feedback">
+                " Введите описание"
+            </div>
+        </div>
+    </div>
+    <hr class="my-4" />
+    <button class="w-100 btn btn-primary btn-lg" type="submit">Добавить</button>
+    <div class="container">
+        <a asp-area="" asp-controller="Roles" asp-action="Roles">Перейти к списку всех ролей</a>
+    </div>
+</form>

@@ -8,6 +8,10 @@ namespace Blog.Data.Models.Db
         /// <summary>
         /// Модель пользователя
         /// </summary>
+        
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+
         [Required (ErrorMessage = "Не задано изображение")]
         [Url (ErrorMessage = "Некорректный адрес")]
         public string ImageUrl { get; set; }

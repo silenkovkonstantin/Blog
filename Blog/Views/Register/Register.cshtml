@@ -1,9 +1,46 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Blog.ViewModels.RegisterViewModel
 @{
+    ViewBag.Title = "Registeration";
+    Layout = "/Views/Shared/_Layout.cshtml";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Добавьте нового пользователя</h1>
-</div>
+<h4 class="mb-3">Регистрация пользователя</h4>
+<form class="needs-validation" novalidate asp-controller="Register" asp-action="Register">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="row g-3">
+        <div class="col-12">
+            <label for="firstname" class="form-label">Имя</label>
+            <input asp-for="FirstName" type="text" class="form-control" id="firstName" placeholder required />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+            <div class="invalid-feedback">
+                " Введите имя"
+            </div>
+        </div>
+        <div class="col-12">
+            <label for="lastname" class="form-label">Фамилия</label>
+            <input asp-for="LastName" type="text" class="form-control" id="lastName" placeholder required />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+            <div class="invalid-feedback">
+                " Введите фамилию"
+            </div>
+        </div>
+        <div class="col-12">
+            <label for="email" class="form-label">Почтовый адрес</label>
+            <input asp-for="EmailReg" type="email" class="form-control" id="email" placeholder="you@example.com" />
+            <span asp-validation-for="EmailReg" class="text-danger"></span>
+            <div class="invalid-feedback">
+                " Введите коректный адрес электронной почты"
+            </div>
+        </div>
+        <div class="col-12">
+            <label for="password" class="form-label">Пароль</label>
+            <input asp-for="PasswordReg" type="password" class="form-control" id="password" placeholder="**********" />
+            <span asp-validation-for="PasswordReg" class="text-danger"></span>
+            <div class="invalid-feedback">
+                " Введите коректный пароль"
+            </div>
+        </div>
+    </div>
+    <hr class="my-4" />
+    <button class="w-100 btn btn-primary btn-lg" type="submit">Зарегистрироваться</button>
+</form>

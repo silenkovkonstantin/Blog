@@ -1,0 +1,50 @@
+﻿@model Blog.ViewModels.PostsViewModel
+@{
+    ViewBag.Title = "Signin";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<h4 class="mb-3">Добавление статьи</h4>
+<form asp-controller="Posts" asp-action="NewPost">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="row g-3">
+        <ul>
+            @foreach (var tag in Model.Tags.Tags)
+            {
+                <li>
+                    <input type="checkbox" class="form-check-input">
+                    <label class="form-check-label">@tag</label>
+                </li>
+            }
+        </ul>
+        <div class="form-check">
+            <label class="form-label">Заголовок</label>
+            <input asp-for="NewPost.Title" type="text" class="form-control" placeholder required />
+            <span asp-validation-for="NewPost.Title" class="text-danger"></span>
+            <div class="invalid-feedback">
+                " Введите название"
+            </div>
+        </div>
+        <div class="col-12">
+            <label class="form-label">Описание</label>
+            <textarea asp-for="NewPost.Description" placeholder="В этой статье вы узнаете как установить .NET в macOS состоит из среды" value required />
+            <span asp-validation-for="NewPost.Description" class="text-danger"></span>
+            <div class="invalid-feedback">
+                " Добавьте описание статьи"
+            </div>
+        </div>
+        <div class="col-12">
+            <label class="form-label">Контент</label>
+            <input asp-for="NewPost.Text" type="text" class="form-control" placeholder="В этой статье вы узнаете как установить .NET в macOS состоит из среды" required />
+            <span asp-validation-for="NewPost.Text" class="text-danger"></span>
+            <div class="invalid-feedback">
+                " Добавьте текст статьи"
+            </div>
+        </div>
+    </div>
+    <hr class="my-4" />
+    <button class="w-100 btn btn-primary btn-lg" type="submit">Добавить</button>
+    <div class="container">
+        <a asp-area="" asp-controller="Posts" asp-action="Posts">Вернуться к списку всех статей</a>
+    </div>
+</form>

@@ -10,11 +10,11 @@ namespace Blog.Data
     public sealed class ApplicationDbContext : IdentityDbContext<User, Role, string>
     {
         //public DbSet<User> Users { get; set; }
-
+        [Comment("Статьи")]
         public DbSet<Post> UserPosts { get; set; }
-
+        [Comment("Комментарии")]
         public DbSet<Comment> UserComments { get; set; }
-
+        [Comment("Тэги")]
         public DbSet<Tag> PostTags { get; set; }
 
         //public DbSet<Role> Roles { get; set; }

@@ -7,6 +7,6 @@ namespace Blog.Data.Models.Db
         /// <summary>
         /// Модель пользовательской роли
         /// </summary>
-        
+        public string Description { get; set; }
     }
 }

@@ -32,8 +32,8 @@ namespace Blog.UnitTests.Controllers
         [Fact]
         public void Register_ReturnsBadRequestResult_WhenModelStateIsInvalid()
         {
+            // Arrange
             _controller.ModelState.AddModelError("Login", "Поле Имя обязательно для заполнения");
-
             var formModel = new RegisterViewModel
             {
                 Login = "new_user",
@@ -42,9 +42,9 @@ namespace Blog.UnitTests.Controllers
                 PasswordConfirm = "123",
                 ImageUrl = "https://i.pinimg.com/originals/5c/9c/36/5c9c363f068fd9808161e711257b0946.jpg"
             };
-
+            // Act
             var result = _controller.Register(formModel);
-
+            // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             Assert.IsType<SerializableError>(badRequestResult.Value);
         }
@@ -52,6 +52,7 @@ namespace Blog.UnitTests.Controllers
         [Fact]
         public void Register_RegisterUserAndReturnsARedirect_WhenModelStateIsValid()
         {
+            // Arrange
             var formModel = new RegisterViewModel
             {
                 Login = "new_user",
@@ -60,9 +61,9 @@ namespace Blog.UnitTests.Controllers
                 PasswordConfirm = "123",
                 ImageUrl = "https://i.pinimg.com/originals/5c/9c/36/5c9c363f068fd9808161e711257b0946.jpg"
             };
-
+            // Act
             var result = _controller.Register(formModel);
-
+            // Assert
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Null(redirectToActionResult.ControllerName);
             Assert.Equal("Index", redirectToActionResult.ActionName);

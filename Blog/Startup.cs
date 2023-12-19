@@ -22,6 +22,8 @@ namespace Blog
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllersWithViews();
+
             //string connection = Configuration.GetConnectionString("DefaultConnecton");
             var mapperConfig = new MapperConfiguration((v) =>
             {
@@ -29,13 +31,13 @@ namespace Blog
             });
             IMapper mapper = mapperConfig.CreateMapper();
 
-            services.AddSingleton(mapper)
-                .AddDbContext<ApplicationDbContext>(options => options.UseSqlite($"Data Source={_env.ContentRootPath}/BlogDb.db"))
-                .AddUnitOfWork()
-                .AddCustomRepository<Post, PostsRepository>()
-                .AddCustomRepository<Comment, CommentsRepository>()
-                .AddCustomRepository<Tag, TagsRepository>()
-                .AddIdentity<User, IdentityRole>(opts =>
+            services.AddSingleton(mapper);
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite($"Data Source={_env.ContentRootPath}/BlogDb.db"));
+            services.AddUnitOfWork();
+            services.AddCustomRepository<Post, PostsRepository>();
+            services.AddCustomRepository<Comment, CommentsRepository>();
+            services.AddCustomRepository<Tag, TagsRepository>();
+            services.AddIdentity<User, IdentityRole>(opts =>
                 {
                     opts.Password.RequiredLength = 5;
                     opts.Password.RequireNonAlphanumeric = false;
@@ -43,8 +45,7 @@ namespace Blog
                     opts.Password.RequireLowercase = false;
                     opts.Password.RequireUppercase = false;
                     //opts.ClaimsIdentit
-                })
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                }).AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddAuthentication(options => options.DefaultScheme = "Cookies")
                 .AddCookie("Cookies", options =>
@@ -75,6 +76,7 @@ namespace Blog
                 app.UseHsts();
             }
 
+            app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();

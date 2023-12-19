@@ -27,7 +27,9 @@ namespace Blog.UnitTests.Controllers
         [Fact]
         public void Comments_ActionExecutes_ReturnsViewForComments()
         {
+            // Act
             var result = _controller.Comments();
+            // Assert
             Assert.IsType<ViewResult>(result);
         }
     }
