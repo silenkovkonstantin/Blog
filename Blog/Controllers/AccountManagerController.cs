@@ -48,22 +48,27 @@ namespace Blog.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [Authorize(Roles = "Администратор")]
         [Route("Login")]
         [HttpGet]
         public IActionResult Login()
         {
-            return View("Home/Login");
+            return View("Login");
         }
+
+        //[HttpGet]
+        //public IActionResult Login(string returnUrl = null)
+        //{
+        //    return View(new LoginViewModel { ReturnUrl = returnUrl });
+        //}
 
         [Authorize(Roles = "Администратор")]
         [Route("Edit")]
         [HttpGet]
-        public IActionResult Edit()
+        public async Task<IActionResult> Edit()
         {
             var user = User;
-            var result = _userManager.GetUserAsync(user);
-            var editmodel = _mapper.Map<UserEditViewModel>(result.Result);
+            var result = await _userManager.GetUserAsync(user);
+            var editmodel = _mapper.Map<UserEditViewModel>(result);
 
             return View("Edit", editmodel);
         }
@@ -95,7 +100,6 @@ namespace Blog.Controllers
             }
         }
 
-        [Authorize(Roles = "Администратор")]
         [Route("Login")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -121,7 +125,7 @@ namespace Blog.Controllers
 
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
 
-                    return RedirectToAction("MyPage", "AccountManager");
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
@@ -132,7 +136,6 @@ namespace Blog.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [Authorize(Roles = "Администратор")]
         [Route("Logout")]
         [HttpPost]
         [ValidateAntiForgeryToken]

@@ -39,6 +39,7 @@ namespace Blog.Data
                     ImageUrl = images[i],
                     UserName = names[i],
                     Roles = new List<Role> { role },
+                    Password = password,
                     // Создание хэш-пароля и его верификацию допишу потом
                     //PasswordHash
                 };

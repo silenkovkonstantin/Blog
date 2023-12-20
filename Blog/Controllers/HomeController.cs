@@ -13,11 +13,14 @@ namespace Blog.Controllers
             _logger = logger;
         }
 
+        [Route("")]
+        [Route("[controller]/[action]")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [Route("[action]")]
         public IActionResult Privacy()
         {
             return View();
