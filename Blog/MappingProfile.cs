@@ -10,7 +10,8 @@ namespace Blog
         {
             CreateMap<User, UserViewModel>()
                 .ConstructUsing(v => new UserViewModel(v));
-            CreateMap<IEnumerable<User>, UserViewModel>();
+            CreateMap<IEnumerable<User>, UsersViewModel>();
+            CreateMap<RegisterViewModel, User>();
             CreateMap<IEnumerable<Post>, PostsViewModel>();
             CreateMap<PostsViewModel, Post>();
             CreateMap<IEnumerable<Comment>, CommentsViewModel>();

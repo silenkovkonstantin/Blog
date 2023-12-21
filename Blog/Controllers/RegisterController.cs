@@ -21,15 +21,13 @@ namespace Blog.Controllers
             _signInManager = signInManager;
         }
 
-        [Authorize(Roles = "Администратор")]
         [Route("Register")]
         [HttpGet]
         public IActionResult Register()
         {
-            return View("Home/Register");
+            return View("Register");
         }
 
-        [Authorize(Roles = "Администратор")]
         [Route("Register")]
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
@@ -37,6 +35,11 @@ namespace Blog.Controllers
             if (ModelState.IsValid)
             {
                 var user = _mapper.Map<User>(model);
+                user.Roles = new List<Role> { new Role
+                {
+                    Name = "Пользователь",
+                    Description = "Пользователь может просматривать статьи и оставлять комментарии",
+                } };
 
                 var result = await _userManager.CreateAsync(user, model.PasswordReg);
                 if (result.Succeeded)

@@ -17,7 +17,7 @@ namespace Blog.ViewModels
         [Required(ErrorMessage = "Поле Никнейм обязательно для заполнения")]
         [DataType(DataType.Text)]
         [Display(Name = "Никнейм", Prompt = "Введите никнейм")]
-        public string Login { get; set; }
+        public string UserName { get; set; }
 
         [Required(ErrorMessage = "Поле Email обязтельно для заполнения")]
         [EmailAddress]

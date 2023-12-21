@@ -8,5 +8,11 @@ namespace Blog.Data.Models.Db
         /// Модель пользовательской роли
         /// </summary>
         public string Description { get; set; }
+
+        //public Role(string roleName, string description)
+        //{
+        //    Name = roleName;
+        //    Description = description;
+        //}
     }
 }
