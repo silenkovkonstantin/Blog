@@ -11,7 +11,7 @@ namespace Blog.Data
         public readonly string[] images = new string[] { "https://i.pinimg.com/564x/34/63/34/346334640dd06e074b5b37c1e1263931.jpg",
             "https://i.pinimg.com/564x/6f/9e/00/6f9e00506669102bd4dd6f98a966e3cf.jpg",
             "https://i.pinimg.com/originals/5c/9c/36/5c9c363f068fd9808161e711257b0946.jpg" };
-        public readonly string password = "123";
+        public readonly string[] passwords = new string[] { "09876", "98765", "87654" };
         public readonly string[] roles = new string[] { "Администратор", "Модератор", "Пользователь" };
         public readonly string[] descriptions = new string[] { "Администратор имеет доступ ко всему",
             "Модератор имеет доступ к редактированию статей и комментариев",
@@ -39,7 +39,7 @@ namespace Blog.Data
                     ImageUrl = images[i],
                     UserName = names[i],
                     Roles = new List<Role> { role },
-                    Password = password,
+                    Password = passwords[i],
                     // Создание хэш-пароля и его верификацию допишу потом
                     //PasswordHash
                 };

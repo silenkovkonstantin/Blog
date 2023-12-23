@@ -8,7 +8,6 @@ namespace Blog.Data.Models.Db
         /// <summary>
         /// Модель пользователя
         /// </summary>
-        
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Password { get; set; }

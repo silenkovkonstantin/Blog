@@ -11,7 +11,9 @@ namespace Blog
             CreateMap<User, UserViewModel>()
                 .ConstructUsing(v => new UserViewModel(v));
             CreateMap<IEnumerable<User>, UsersViewModel>();
-            CreateMap<RegisterViewModel, User>();
+            CreateMap<RegisterViewModel, User>()
+                .ForMember(x => x.Email, opt => opt.MapFrom(c => c.EmailReg))
+                .ForMember(x => x.Password, opt => opt.MapFrom(c => c.PasswordReg));
             CreateMap<IEnumerable<Post>, PostsViewModel>();
             CreateMap<PostsViewModel, Post>();
             CreateMap<IEnumerable<Comment>, CommentsViewModel>();

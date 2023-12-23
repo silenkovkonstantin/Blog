@@ -17,10 +17,10 @@ namespace Blog.ViewModels
         [Required(ErrorMessage = "Поле Никнейм обязательно для заполнения")]
         [DataType(DataType.Text)]
         [Display(Name = "Никнейм", Prompt = "Введите никнейм")]
-        public string Login { get; set; }
-        [Required]
-        [Display(Name = "Идентификатор пользователя")]
-        public string UserId { get; set; }
+        public string UserName { get; set; }
+        //[Required]
+        //[Display(Name = "Идентификатор пользователя")]
+        //public string UserId { get; set; }
 
         [EmailAddress]
         [Display(Name = "Email", Prompt = "example.com")]
