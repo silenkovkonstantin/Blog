@@ -20,6 +20,7 @@ namespace Blog
             CreateMap<CommentsViewModel, Comment>();
             CreateMap<IEnumerable<Tag>, TagsViewModel>();
             CreateMap<TagsViewModel, Tag>();
+            CreateMap<LoginViewModel, User>();
         }
     }
 }

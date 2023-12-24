@@ -18,9 +18,10 @@ namespace Blog.ViewModels
         [DataType(DataType.Text)]
         [Display(Name = "Никнейм", Prompt = "Введите никнейм")]
         public string UserName { get; set; }
-        //[Required]
-        //[Display(Name = "Идентификатор пользователя")]
-        //public string UserId { get; set; }
+
+        [Required]
+        [Display(Name = "Идентификатор пользователя")]
+        public string UserId { get; set; }
 
         [EmailAddress]
         [Display(Name = "Email", Prompt = "example.com")]

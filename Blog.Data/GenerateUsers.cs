@@ -26,7 +26,7 @@ namespace Blog.Data
             {
                 var role = new Role
                 {
-                    Id = i.ToString(),
+                    //Id = i.ToString(),
                     Name = roles[i],
                     Description = descriptions[i],
                 };

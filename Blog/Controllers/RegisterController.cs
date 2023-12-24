@@ -37,8 +37,10 @@ namespace Blog.Controllers
                 var user = _mapper.Map<User>(model);
                 user.Roles = new List<Role> { new Role
                 {
-                    Name = "Пользователь",
-                    Description = "Пользователь может просматривать статьи и оставлять комментарии",
+                    //Name = "Пользователь",
+                    //Description = "Пользователь может просматривать статьи и оставлять комментарии",
+                    Name = "Администратор",
+                    Description = "Администратор имеет доступ ко всему",
                 } };
 
                 var result = await _userManager.CreateAsync(user, model.PasswordReg);

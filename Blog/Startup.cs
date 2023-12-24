@@ -37,15 +37,19 @@ namespace Blog
             services.AddCustomRepository<Post, PostsRepository>();
             services.AddCustomRepository<Comment, CommentsRepository>();
             services.AddCustomRepository<Tag, TagsRepository>();
-            services.AddIdentity<User, IdentityRole>(opts =>
+            services.AddIdentity<User, Role>(opts =>
                 {
                     opts.Password.RequiredLength = 5;
                     opts.Password.RequireNonAlphanumeric = false;
                     opts.Password.RequireDigit = false;
                     opts.Password.RequireLowercase = false;
                     opts.Password.RequireUppercase = false;
+                    opts.SignIn.RequireConfirmedAccount = false;
+                    opts.SignIn.RequireConfirmedEmail = false;
                     //opts.ClaimsIdentit
-                }).AddEntityFrameworkStores<ApplicationDbContext>();
+                })
+                //.AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddAuthentication(options => options.DefaultScheme = "Cookies")
                 .AddCookie("Cookies", options =>

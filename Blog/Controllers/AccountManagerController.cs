@@ -39,7 +39,7 @@ namespace Blog.Controllers
 
             foreach (var user in userlist)
             {
-                var result = await _userManager.CreateAsync(user, "123456");
+                var result = await _userManager.CreateAsync(user);
 
                 if (!result.Succeeded)
                     continue;
@@ -107,11 +107,18 @@ namespace Blog.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = _mapper.Map<User>(model);
-                var result = await _signInManager.PasswordSignInAsync(user.Email, model.Password, model.RememberMe, false);
+                //var user = _mapper.Map<User>(model);
+
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+                //var passTest = await _userManager.CheckPasswordAsync(user, model.Password);
+
+                var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, false);
 
                 if (result.Succeeded)
                 {
+                    var roleName = user.Roles.OrderBy(r => r.Name).First().Name;
+
                     var claims = new List<Claim>()
                     {
                         new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
@@ -120,6 +127,8 @@ namespace Blog.Controllers
                         // Первая в списке всегда с максимальными правами.
                     };
 
+                    //claims.Add(new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email));
+                    //claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, "Администратор"));
                     var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 

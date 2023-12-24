@@ -16,6 +16,10 @@
         <span asp-validation-for="Password" class="text-danger"></span>
         <label for="floatingPassword">Password</label>
     </div>
+    <div class="form-check">
+        <input asp-for="RememberMe" type="checkbox" class="form-check-input">
+        <label class="form-check-label" for="remembeMe">Запоминить меня</label>
+    </div>
     <button class="btn btn-primary w-100 py-2" type="submit">Войти</button>
     <div class="container">
         Еще нет аккаунта? <a asp-area="" asp-controller="Register" asp-action="Register">Зарегистрируйтесь</a>
