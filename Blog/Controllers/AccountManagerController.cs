@@ -117,12 +117,10 @@ namespace Blog.Controllers
 
                 if (result.Succeeded)
                 {
-                    var roleName = user.Roles.OrderBy(r => r.Name).First().Name;
-
                     var claims = new List<Claim>()
                     {
                         new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
-                        new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Roles.OrderBy(r => r.Name).First().Name)
+                        new Claim(ClaimsIdentity.DefaultRoleClaimType, "Администратор"),//user.Roles.OrderBy(r => r.Name).First().Name)
                         // Роли в списке сортируются в порядке: Администратор, Модератор, Пользователь.
                         // Первая в списке всегда с максимальными правами.
                     };

@@ -9,6 +9,8 @@ namespace Blog.Data.Models.Db
         /// </summary>
         public string Description { get; set; }
 
+        public string UserId { get; set; }
+
         //public Role(string roleName, string description)
         //{
         //    Name = roleName;
