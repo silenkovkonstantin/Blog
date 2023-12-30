@@ -3,6 +3,7 @@ using Blog.Controllers;
 using Blog.Data.Models.Db;
 using Blog.Data.Repository;
 using Blog.Data.UoW;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System;
@@ -17,13 +18,15 @@ namespace Blog.UnitTests.Controllers
     {
         private readonly Mock<IUnitOfWork> _mockUnitOfWork;
         private Mock<IMapper> _mockMapper;
+        private Mock<UserManager<User>> _mockUserManager;
         private readonly PostsController _controller;
 
         public PostsControllerTests()
         {
             _mockUnitOfWork = new Mock<IUnitOfWork>();
             _mockMapper = new Mock<IMapper>();
-            _controller = new PostsController(_mockMapper.Object, _mockUnitOfWork.Object);
+            _mockUserManager = new Mock<UserManager<User>>();
+            _controller = new PostsController(_mockMapper.Object, _mockUserManager.Object, _mockUnitOfWork.Object);
         }
 
         [Fact]

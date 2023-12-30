@@ -5,9 +5,9 @@ namespace Blog.Extensions
 {
     public static class UserFromModel
     {
-        public static User Convert(this User user, UserEditViewModel usereditvm)
+        public static User Convert(this User user, UserViewModel usereditvm)
         {
-            user.ImageUrl = usereditvm.ImageUrl;
+            //user.ImageUrl = usereditvm.ImageUrl;
             user.Email = usereditvm.Email;
 
             return user;

@@ -12,9 +12,9 @@ namespace Blog.Data.Repository
 
         public async Task<List<Post>> GetAllUserPostsAsync(string id)
         {
-            Set.Include(x => x.Author);
+            Set.Include(x => x.User);
 
-            var userPosts = Set.AsEnumerable().Where(x => x.Author.Id == id).ToList();
+            var userPosts = Set.AsEnumerable().Where(x => x.User.Id == id).ToList();
             return await Task.Run(() => userPosts);
         }
     }

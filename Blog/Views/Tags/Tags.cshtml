@@ -1,6 +1,46 @@
-﻿@model Blog.ViewModels.TagsViewModel
+﻿@using Microsoft.AspNetCore.Identity;
+@using Blog.Data.Models.Db;
+@inject UserManager<User> UserManager;
+@model IEnumerable<Tag>
 @{
     ViewBag.Title = "Tags";
     Layout = "/Views/Shared/_Layout.cshtml";
 }
+
+<h4 class="mb-3">Все теги</h4>
+<div class="container">
+    <a asp-area="" asp-controller="Tags" asp-action="NewTag">Добавить тег</a>
+</div>
+<hr class="my-4" />
+<form asp-controller="Tags" asp-action="Tags">
+    <div asp-validation-summary="ModelOnly"></div>
+    @if (Model.Count() != 0)
+    {
+        @foreach (var tag in Model)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        @tag.Name
+                    </h5>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-10">
+                                @if (User.IsInRole("Модератор"))
+                                {
+                                    <a class="btn btn-outline-primary" asp-controller="Tags" asp-action="Edit" asp-route-id="@tag.Id">Редактировать</a>
+                                    <a class="btn btn-outline-danger" asp-controller="Tags" asp-action="Delete" asp-route-id="@tag.Id">Удалить</a>
+                                }
+                            </div>
+                            <div class="col-2">
+                                <p class="card-text">Статей по тегу: @tag.Posts.Count</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    
+</form>
 

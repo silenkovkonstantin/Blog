@@ -35,17 +35,12 @@ namespace Blog.Controllers
             if (ModelState.IsValid)
             {
                 var user = _mapper.Map<User>(model);
-                user.Roles = new List<Role> { new Role
-                {
-                    //Name = "Пользователь",
-                    //Description = "Пользователь может просматривать статьи и оставлять комментарии",
-                    Name = "Администратор",
-                    Description = "Администратор имеет доступ ко всему",
-                } };
 
                 var result = await _userManager.CreateAsync(user, model.PasswordReg);
                 if (result.Succeeded)
                 {
+                    // Установка куки
+                    await _userManager.AddToRoleAsync(user, "Пользователь");
                     await _signInManager.SignInAsync(user, false);
                     return RedirectToAction("Index", "Home");
                 }

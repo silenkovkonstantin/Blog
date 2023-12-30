@@ -36,12 +36,7 @@ namespace Blog.Data
                     FirstName = firstNames[i],
                     LastName = lastNames[i],
                     Email = names[i] + "@gmail.com",
-                    ImageUrl = images[i],
                     UserName = names[i],
-                    Roles = new List<Role> { role },
-                    Password = passwords[i],
-                    // Создание хэш-пароля и его верификацию допишу потом
-                    //PasswordHash
                 };
 
                 users.Add(user);

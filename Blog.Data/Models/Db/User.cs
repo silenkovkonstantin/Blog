@@ -10,10 +10,9 @@ namespace Blog.Data.Models.Db
         /// </summary>
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Password { get; set; }
-        [Required (ErrorMessage = "Не задано изображение")]
-        [Url (ErrorMessage = "Некорректный адрес")]
-        public string ImageUrl { get; set; }
-        public List<Role> Roles { get; set; }
+        // Навигационное свойство
+        public List<Post> Posts { get; set; } = new List<Post>();
+        // Навигационное свойство
+        public List<Comment> Comments { get; set;} = new List<Comment>();
     }
 }

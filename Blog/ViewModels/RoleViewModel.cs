@@ -4,10 +4,8 @@ namespace Blog.ViewModels
 {
     public class RoleViewModel
     {
-        public Role Role { get; set; }
-        public RoleViewModel(Role role)
-        {
-            Role = role;
-        }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public bool IsChecked { get; set; }
     }
 }

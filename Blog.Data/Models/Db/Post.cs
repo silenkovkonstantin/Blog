@@ -16,10 +16,15 @@ namespace Blog.Data.Models.Db
         public string Description { get; set; }
         [Required (ErrorMessage = "Не задан текст статьи")]
         [StringLength(5000, MinimumLength = 3, ErrorMessage = "Длина текста должна быть от 3 до 50 символов")]
+        public DateTime CreatedDate { get; set; }
         public string Text { get; set; }
-        public User Author { get; set; }
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
-        public List<Tag> Tags { get; set; }
-        public List<Comment> Comments { get; set; }
+        // Внешний ключ
+        public string UserId { get; set; }
+        // Навигационное свойство
+        public User User { get; set; }
+        // Навигационное свойство
+        public List<Tag> Tags { get; set; } = new List<Tag>();
+        // Навигационное свойство
+        public List<Comment> Comments { get; set; } = new List<Comment>();
     }
 }

@@ -22,64 +22,78 @@ namespace Blog.Controllers
 
         [Authorize(Roles = "Администратор")]
         [Route("Tags")]
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Tags()
         {
-            var repository = _unitOfWork.GetRepository<Tag>() as TagsRepository;
             var tags = await GetAllTagsAsync();
-            var model = _mapper.Map<IEnumerable<Tag>, TagsViewModel>(tags);
 
-            return View("Tags", model);
+            return View("Tags", tags);
+        }
+
+        [Route("NewTag")]
+        [HttpGet]
+        public IActionResult NewTag()
+        {
+            return View("NewTag");
         }
 
         [Authorize(Roles = "Администратор")]
         [Route("NewTag")]
         [HttpPost]
-        public async Task<IActionResult> NewTag(TagsViewModel tagsvm)
+        public async Task<IActionResult> NewTag(Tag tag)
         {
             var repository = _unitOfWork.GetRepository<Tag>() as TagsRepository;
-            var tag = _mapper.Map<TagsViewModel, Tag>(tagsvm);
+            var allTags = await GetAllTagsAsync();
+            
+            if (allTags.Select(t => t.Name).Contains(tag.Name))
+            {
+                return RedirectToAction("NewTag");
+            }
+
             await repository.CreateAsync(tag);
             var tags = await GetAllTagsAsync();
-            var model = _mapper.Map<IEnumerable<Tag>, TagsViewModel>(tags);
 
-            return View("Tags", model);
+            return View("Tags", tags);
+        }
+
+        [Route("TagEdit")]
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var tag = await GetTagAsync(id);
+            return View("TagEdit", tag);
         }
 
         [Authorize(Roles = "Администратор")]
-        [Route("Update")]
+        [Route("TagEdit")]
         [HttpPost]
-        public async Task<IActionResult> Update(TagsViewModel tagsvm)
+        public async Task<IActionResult> Edit(Tag tag)
         {
             var repository = _unitOfWork.GetRepository<Tag>() as TagsRepository;
-            var tag = _mapper.Map<TagsViewModel, Tag>(tagsvm);
             await repository.UpdateAsync(tag);
             var tags = await GetAllTagsAsync();
-            var model = _mapper.Map<IEnumerable<Tag>, TagsViewModel>(tags);
 
-            return View("Tags", model);
+            return View("Tags", tags);
         }
 
         [Authorize(Roles = "Администратор")]
-        [Route("Delete")]
-        [HttpPost]
-        public async Task<IActionResult> Delete(int id, TagsViewModel tagsvm)
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
         {
             var repository = _unitOfWork.GetRepository<Tag>() as TagsRepository;
             var tag = await GetTagAsync(id);
             await repository.DeleteAsync(tag);
             var tags = await GetAllTagsAsync();
-            var model = _mapper.Map<IEnumerable<Tag>, TagsViewModel>(tags);
 
-            return View("Tags", model);
+            return View("Tags", tags);
         }
 
         private async Task<List<Tag>> GetAllTagsAsync()
         {
             var repository = _unitOfWork.GetRepository<Tag>() as TagsRepository;
-            var comments = await repository.GetAllAsync();
+            var tags = await repository.GetAllAsync();
 
-            return comments.ToList();
+            return tags.ToList();
         }
 
         private async Task<Tag> GetTagAsync(int id)

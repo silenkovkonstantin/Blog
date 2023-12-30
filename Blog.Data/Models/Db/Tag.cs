@@ -10,6 +10,7 @@ namespace Blog.Data.Models.Db
         public int Id { get; set; }
         [Required (ErrorMessage = "Не задано наименование")]
         public string Name { get; set; }
-        //public List<Article> Articles { get; set; }
+        // Навигационное свойство
+        public List<Post> Posts { get; set; } = new List<Post>();
     }
 }

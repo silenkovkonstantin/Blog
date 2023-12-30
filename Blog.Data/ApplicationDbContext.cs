@@ -1,5 +1,6 @@
 ﻿using Blog.Configs;
 using Blog.Data.Models.Db;
+using Microsoft.AspNetCore.Identity;
 //using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -11,11 +12,11 @@ namespace Blog.Data
     {
         //public DbSet<User> Users { get; set; }
         [Comment("Статьи")]
-        public DbSet<Post> UserPosts { get; set; }
+        public DbSet<Post> Posts { get; set; }
         [Comment("Комментарии")]
-        public DbSet<Comment> UserComments { get; set; }
+        public DbSet<Comment> Comments { get; set; }
         [Comment("Тэги")]
-        public DbSet<Tag> PostTags { get; set; }
+        public DbSet<Tag> Tags { get; set; }
 
         //public DbSet<Role> Roles { get; set; }
 

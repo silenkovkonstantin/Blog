@@ -13,6 +13,9 @@ namespace Blog.Data.Models.Db
         [StringLength (500, MinimumLength = 3, ErrorMessage = "Длина текста должна быть от 3 до 500 символов")]
         public string Text { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
-        public User Author { get; set; }
+        // Внешний ключ
+        public string UserId { get; set; }
+        // Навигационное свойство
+        public User User { get; set; }
     }
 }

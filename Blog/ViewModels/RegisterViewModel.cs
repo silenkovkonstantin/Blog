@@ -22,7 +22,7 @@ namespace Blog.ViewModels
         [Required(ErrorMessage = "Поле Email обязтельно для заполнения")]
         [EmailAddress]
         [Display(Name = "Email", Prompt = "example.com")]
-        public string EmailReg { get; set; }
+        public string Email { get; set; }
 
         [Required(ErrorMessage = "Поле Пароль обязательно для заполнения")]
         [DataType(DataType.Password)]
@@ -35,9 +35,5 @@ namespace Blog.ViewModels
         [DataType(DataType.Password)]
         [Display(Name = "Подтверждение пароля", Prompt = "Повторно введите пароль")]
         public string PasswordConfirm { get; set; }
-
-        [DataType(DataType.ImageUrl)]
-        [Display(Name = "Фото", Prompt = "Ссылка на изображение")]
-        public string ImageUrl { get; set; }
     }
 }

@@ -40,10 +40,4 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="BlogDb.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

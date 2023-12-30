@@ -8,19 +8,17 @@ namespace Blog
     {
         public MappingProfile()
         {
-            CreateMap<User, UserViewModel>()
-                .ConstructUsing(v => new UserViewModel(v));
-            CreateMap<IEnumerable<User>, UsersViewModel>();
-            CreateMap<RegisterViewModel, User>()
-                .ForMember(x => x.Email, opt => opt.MapFrom(c => c.EmailReg))
-                .ForMember(x => x.Password, opt => opt.MapFrom(c => c.PasswordReg));
-            CreateMap<IEnumerable<Post>, PostsViewModel>();
-            CreateMap<PostsViewModel, Post>();
+            CreateMap<RegisterViewModel, User>();
+            CreateMap<LoginViewModel, User>();
+            CreateMap<User, UserViewModel>();
+            CreateMap<UserViewModel, User>();
+            CreateMap<PostViewModel, Post>();
+            CreateMap<Post, PostViewModel>();
             CreateMap<IEnumerable<Comment>, CommentsViewModel>();
             CreateMap<CommentsViewModel, Comment>();
-            CreateMap<IEnumerable<Tag>, TagsViewModel>();
-            CreateMap<TagsViewModel, Tag>();
-            CreateMap<LoginViewModel, User>();
+            CreateMap<TagViewModel, Tag>();
+            //CreateMap<List<TagViewModel>, List<Tag>>();
+            //CreateMap<List<CommentViewModel>, List<Comment>>();
         }
     }
 }

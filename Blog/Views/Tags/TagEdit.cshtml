@@ -1,17 +1,17 @@
 ﻿@using Blog.Data.Models.Db;
 @model Tag
 @{
-    ViewBag.Title = "NewTag";
+    ViewBag.Title = "TagEdit";
     Layout = "/Views/Shared/_Layout.cshtml";
 }
 
-<h4 class="mb-3">Добавление тега</h4>
-<form asp-controller="Tags" asp-action="NewTag">
+<h4 class="mb-3">Редактирование тега</h4>
+<form asp-controller="Tags" asp-action="Edit">
     <div asp-validation-summary="ModelOnly"></div>
     <div class="row g-3">
         <div class="col-12">
             <label for="tag" class="form-label">Название</label>
-            <input asp-for="@Model.Name" type="text" class="form-control" placeholder required />
+            <input asp-for="@Model.Name" type="text" class="form-control" placeholder="@Model.Name" />
             <span asp-validation-for="@Model.Name" class="text-danger"></span>
             <div class="invalid-feedback">
                 " Введите название"
@@ -19,7 +19,7 @@
         </div>
     </div>
     <hr class="my-4" />
-    <button class="w-100 btn btn-primary btn-lg" type="submit">Добавить</button>
+    <button class="w-100 btn btn-primary btn-lg" type="submit">Сохранить</button>
     <div class="container">
         <a asp-area="" asp-controller="Tags" asp-action="Tags">Перейти к списку всех тегов</a>
     </div>

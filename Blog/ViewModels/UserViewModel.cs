@@ -1,16 +1,35 @@
 ﻿using Blog.Data.Models.Db;
+using System.ComponentModel.DataAnnotations;
 
 namespace Blog.ViewModels
 {
     public class UserViewModel
     {
-        public User User { get; set; }
+        [Required(ErrorMessage = "Поле Имя обязательно для заполнения")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Имя", Prompt = "Введите имя")]
+        public string FirstName { get; set; }
 
-        public UserViewModel(User user)
-        {
-            User = user;
-        }
+        [Required(ErrorMessage = "Поле Фамилия обязательно для заполнения")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Фамилия", Prompt = "Введите фамилию")]
+        public string LastName { get; set; }
 
-        public List<Post> Posts { get; set; }
+        [Required(ErrorMessage = "Поле Никнейм обязательно для заполнения")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Никнейм", Prompt = "Введите никнейм")]
+        public string UserName { get; set; }
+
+        [EmailAddress]
+        [Display(Name = "Email", Prompt = "example.com")]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = "Поле Пароль обязательно для заполнения")]
+        [DataType(DataType.Password)]
+        [Display(Name = "Пароль", Prompt = "Введите пароль")]
+        [StringLength(100, ErrorMessage = "Поле {0} должно иметь минимум {2} и максимум {1} символов.", MinimumLength = 5)]
+        public string Password { get; set; }
+
+        public List<RoleViewModel> Roles { get; set; } = new List<RoleViewModel>();
     }
 }

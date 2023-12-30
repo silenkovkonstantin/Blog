@@ -1,12 +1,31 @@
-﻿@model Blog.ViewModels.RegisterViewModel
+﻿@model Blog.ViewModels.UserViewModel
 @{
-    ViewBag.Title = "Registeration";
+    ViewBag.Title = "UserEdit";
     Layout = "/Views/Shared/_Layout.cshtml";
 }
 
-<h4 class="mb-3">Регистрация пользователя</h4>
-<form class="needs-validation" novalidate asp-controller="Register" asp-action="Register">
+<h4 class="mb-3">Редактирование пользователя</h4>
+<hr class="my-4" />
+    
+<form class="needs-validation" novalidate asp-controller="Account" asp-action="Edit">
     <div asp-validation-summary="ModelOnly"></div>
+    @for (int i = 0; i < Model.Roles.Count; i++)
+    {
+        <div class="form-check">
+            @if (Model.Roles[i].Name == "Пользователь")
+            {
+                <input type="checkbox" class="form-check-input" value="" id="flexCheckDefault" disabled checked />
+                <label class="form-check-label" for="flexCheckDefault">@Model.Roles[i].Name</label>
+            }
+            else
+            {
+                @Html.CheckBoxFor(model => model.Roles[i].IsChecked, new { @class="form-check-input", @value="", @id="flexCheckDefault", } )
+                //<input type="checkbox" class="form-check-input" value="" id="flexCheckDefault" />
+                <label class="form-check-label" for="flexCheckDefault">@Model.Roles[i].Name</label>
+                @Html.HiddenFor(model => model.Roles[i].Name)
+            }
+        </div>
+    }
     <div class="row g-3">
         <div class="col-12">
             <label for="firstname" class="form-label">Имя</label>
@@ -25,11 +44,11 @@
             </div>
         </div>
         <div class="col-12">
-            <label for="username" class="form-label">Логин</label>
-            <input asp-for="UserName" type="text" class="form-control" id="userName" placeholder required />
+            <label for="username" class="form-label">Никнейм</label>
+            <input asp-for="UserName" type="text" class="form-control" id="lastName" placeholder required />
             <span asp-validation-for="UserName" class="text-danger"></span>
             <div class="invalid-feedback">
-                " Введите логин"
+                " Введите никнейм"
             </div>
         </div>
         <div class="col-12">
@@ -42,21 +61,13 @@
         </div>
         <div class="col-12">
             <label for="password" class="form-label">Пароль</label>
-            <input asp-for="PasswordReg" type="password" class="form-control" id="password" placeholder="**********" />
-            <span asp-validation-for="PasswordReg" class="text-danger"></span>
+            <input asp-for="Password" type="password" class="form-control" id="password" placeholder="**********" />
+            <span asp-validation-for="Password" class="text-danger"></span>
             <div class="invalid-feedback">
                 " Введите корректный пароль"
             </div>
         </div>
-        <div class="col-12">
-            <label for="password" class="form-label">Повторите пароль</label>
-            <input asp-for="PasswordConfirm" type="password" class="form-control" id="password" placeholder="**********" />
-            <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
-            <div class="invalid-feedback">
-                " Пароли не совпадают"
-            </div>
-        </div>
     </div>
     <hr class="my-4" />
-    <button class="w-100 btn btn-primary btn-lg" type="submit">Зарегистрироваться</button>
+    <button class="w-100 btn btn-primary btn-lg" type="submit">Сохранить</button>
 </form>

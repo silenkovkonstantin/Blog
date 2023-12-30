@@ -10,15 +10,15 @@
     <div class="row g-3">
         <div class="col-12">
             <label class="form-label">Название</label>
-            <input asp-for="Role.Name" type="text" class="form-control" placeholder="Модератор" required />
-            <span asp-validation-for="Role.Name" class="text-danger"></span>
+            <input asp-for="Name" type="text" class="form-control" placeholder="Модератор" required />
+            <span asp-validation-for="Name" class="text-danger"></span>
             <div class="invalid-feedback">
                 " Введите название"
             </div>
         </div>
         <div class="col-12">
             <label class="form-label">Описание</label>
-            <textarea asp-for="Role.Description" placeholder="Модератор имеет доступ к редактированию статей и комментариев" value required />
+            <textarea asp-for="Description" placeholder="Модератор имеет доступ к редактированию статей и комментариев" value required />
             <div class="invalid-feedback">
                 " Введите описание"
             </div>
