@@ -17,7 +17,8 @@ namespace Blog.Controllers
         [Route("[controller]/[action]")]
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Posts", "Posts");
+            //return View();
         }
 
         [Route("[action]")]

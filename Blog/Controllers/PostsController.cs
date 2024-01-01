@@ -33,7 +33,18 @@ namespace Blog.Controllers
             return View("Posts", posts);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Post(int id)
+        {
+            var repository = _unitOfWork.GetRepository<Post>() as PostsRepository;
+            var post = await repository.GetAsync(id);
+            var postvm = _mapper.Map<Post, PostViewModel>(post);
+            var author = await _userManager.FindByIdAsync(post.UserId);
+            postvm.User = _mapper.Map<User, UserViewModel>(author);
+            return View("Post", postvm);
+        }
 
+        [Authorize(Roles = "Администратор, Модератор")]
         [Route("NewPost")]
         [HttpGet]
         public async Task<IActionResult> NewPost()
@@ -66,6 +77,7 @@ namespace Blog.Controllers
             return View("Posts", posts);
         }
 
+        [Authorize(Roles = "Администратор, Модератор")]
         [Route("PostEdit")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)

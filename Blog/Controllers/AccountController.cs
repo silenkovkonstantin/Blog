@@ -160,13 +160,18 @@ namespace Blog.Controllers
             return View(model);
         }
 
-        [Route("Logout")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpGet]
+        //public IActionResult Logout(string returnUrl = null)
+        //{
+        //    return RedirectToAction("Posts", "Posts");
+        //}
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index", "Home");
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Posts", "Posts");
         }
 
 

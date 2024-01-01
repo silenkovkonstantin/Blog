@@ -1,0 +1,45 @@
+﻿@using Blog.ViewModels;
+@using Microsoft.AspNetCore.Identity;
+@using Blog.Data.Models.Db;
+@inject UserManager<User> UserManager;
+@model Blog.ViewModels.PostViewModel
+@{
+    ViewBag.Title = "Post";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<h4 class="mb-3">@Model.Title</h4>
+<div class="container">
+    <div class="row g-3">
+        <div class="col-12">
+            @foreach (var tag in Model.Tags)
+            {
+                <span class="badge bg-secondary rounded-pill">@tag.Name</span>
+            }
+        </div>
+    </div>
+</div>
+<p class="lead">
+    @Model.Text
+</p>
+<hr class="my-4" />
+<figure class="text-end">
+    <p>@Model.User.Email</p>
+</figure>
+<p><strong>Комментарии к статье</strong></p>
+<ul class="list-group">
+    @foreach (var comment in Model.Comments)
+    {
+        <li class="list-group-item">
+            <p>@comment.Text</p>
+            <figure class="text-end">
+                <span class="badge bg-success">@comment.User.Email</span>
+            </figure>
+        </li>
+    }
+</ul>
+
+@if (User.Identity.IsAuthenticated)
+{
+    await Html.RenderPartialAsync("../Comments/_NewComment", new CommentViewModel { PostId = Model.Id });
+}

@@ -14,11 +14,13 @@ namespace Blog.Controllers
     public class CommentsController : Controller
     {
         private IMapper _mapper;
+        private readonly UserManager<User> _userManager;
         private IUnitOfWork _unitOfWork;
 
-        public CommentsController(IMapper mapper, IUnitOfWork unitOfWork)
+        public CommentsController(IMapper mapper, UserManager<User> userManager, IUnitOfWork unitOfWork)
         {
             _mapper = mapper;
+            _userManager = userManager;
             _unitOfWork = unitOfWork;
         }
 
@@ -34,18 +36,37 @@ namespace Blog.Controllers
             return View("Comments", model);
         }
 
-        [Authorize(Roles = "Администратор")]
+        //[HttpGet]
+        //public async Task<IActionResult> NewComment(int postid)
+        //{
+        //    var user = await _userManager.GetUserAsync(User);
+        //    var commentvm = new CommentViewModel()
+        //    {
+        //        PostId = postid,
+        //        User = _mapper.Map<User, UserViewModel>(user),
+        //    };
+        //    return View("NewComment", commentvm);
+        //}
+
+        [Authorize(Roles = "Администратор, Модератор, Пользователь")]
         [Route("NewComment")]
         [HttpPost]
-        public async Task<IActionResult> NewComment(CommentsViewModel commentsvm)
+        public async Task<IActionResult> NewComment(CommentViewModel commentvm)
         {
+            var user = await _userManager.GetUserAsync(User);
+            commentvm.User = _mapper.Map<User, UserViewModel>(user);
             var repository = _unitOfWork.GetRepository<Comment>() as CommentsRepository;
-            var comment = _mapper.Map<CommentsViewModel, Comment>(commentsvm);
+            var comment = _mapper.Map<CommentViewModel, Comment>(commentvm);
+            comment.UserId = user.Id;
             await repository.CreateAsync(comment);
-            var comments = await repository.GetAllPostCommentsAsync(comment.PostId);
-            var model = _mapper.Map<IEnumerable<Comment>, CommentsViewModel>(comments);
 
-            return View("Comments", model);
+            var postsRepository = _unitOfWork.GetRepository<Post>() as PostsRepository;
+            var post = await postsRepository.GetAsync(comment.PostId);
+            await postsRepository.UpdateAsync(post);
+
+            //var comments = await repository.GetAllPostCommentsAsync(comment.PostId);
+
+            return RedirectToAction("Post", "Posts", new { id = comment.PostId });
         }
 
         [Authorize(Roles = "Администратор")]

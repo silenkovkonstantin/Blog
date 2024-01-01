@@ -19,7 +19,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">
-                        @post.Title
+                        <a asp-controller="Posts" asp-action="Post" asp-route-id="@post.Id">@post.Title</a>
                     </h5>
                     <div class="container">
                         <div class="row g-3">

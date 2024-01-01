@@ -14,8 +14,8 @@ namespace Blog
             CreateMap<UserViewModel, User>();
             CreateMap<PostViewModel, Post>();
             CreateMap<Post, PostViewModel>();
-            CreateMap<IEnumerable<Comment>, CommentsViewModel>();
-            CreateMap<CommentsViewModel, Comment>();
+            CreateMap<Comment, CommentViewModel>();
+            CreateMap<CommentViewModel, Comment>();
             CreateMap<TagViewModel, Tag>();
             //CreateMap<List<TagViewModel>, List<Tag>>();
             //CreateMap<List<CommentViewModel>, List<Comment>>();
