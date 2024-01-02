@@ -12,13 +12,13 @@ namespace Blog
             CreateMap<LoginViewModel, User>();
             CreateMap<User, UserViewModel>();
             CreateMap<UserViewModel, User>();
-            CreateMap<PostViewModel, Post>();
+            CreateMap<PostViewModel, Post>()
+                .ForMember(x => x.Tags, opt => opt.MapFrom(src => src.Tags.Where(t => t.IsChecked == true)));
             CreateMap<Post, PostViewModel>();
             CreateMap<Comment, CommentViewModel>();
             CreateMap<CommentViewModel, Comment>();
             CreateMap<TagViewModel, Tag>();
-            //CreateMap<List<TagViewModel>, List<Tag>>();
-            //CreateMap<List<CommentViewModel>, List<Comment>>();
+            CreateMap<Tag, TagViewModel>();
         }
     }
 }

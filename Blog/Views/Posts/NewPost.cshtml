@@ -17,9 +17,10 @@
         <div class="form-check">
             <ul class="list-inline">
                 <li class="list-inline-item">
-                    @Html.CheckBoxFor(model => model.Tags[i].IsChecked, new { @class="form-check-input", @value="", @id="flexCheckDefault", } )
+                    @Html.CheckBoxFor(model => model.Tags[i].IsChecked, new { @class="form-check-input", @id="flexCheckDefault", } )
                     @* <input type="checkbox" class="form-check-input" value="" id="flexCheckDefault" /> *@
                     <label class="form-check-label" for="flexCheckDefault">@Model.Tags[i].Name</label>
+                    @Html.HiddenFor(model => model.Tags[i].Id)
                     @Html.HiddenFor(model => model.Tags[i].Name)
                 </li>
             </ul>

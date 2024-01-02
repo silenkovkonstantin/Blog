@@ -20,9 +20,11 @@ namespace Blog.Data.Repository
 
         public async Task CreateAsync(T entity)
         {
-            var entry = _context.Entry(entity);
-            if (entry.State == EntityState.Detached)
-                await entry.Context.AddAsync(entity);
+            await _context.AddAsync<T>(entity);
+
+            //var entry = _context.Entry(entity);
+            //if (entry.State == EntityState.Detached)
+            //    await entry.Context.AddAsync(entity);
 
             await _context.SaveChangesAsync();
         }
@@ -44,12 +46,12 @@ namespace Blog.Data.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public virtual async Task<IEnumerable<T>> GetAllAsync()
         {
             return await _context.Set<T>().ToArrayAsync();
         }
 
-        public async Task<T> GetAsync(int id)
+        public virtual async Task<T> GetAsync(int id)
         {
             return await _context.Set<T>().FindAsync(id);
         }

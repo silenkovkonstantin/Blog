@@ -39,8 +39,8 @@ namespace Blog.Controllers
             var repository = _unitOfWork.GetRepository<Post>() as PostsRepository;
             var post = await repository.GetAsync(id);
             var postvm = _mapper.Map<Post, PostViewModel>(post);
-            var author = await _userManager.FindByIdAsync(post.UserId);
-            postvm.User = _mapper.Map<User, UserViewModel>(author);
+            //var author = await _userManager.FindByIdAsync(post.UserId);
+            //postvm.User = _mapper.Map<User, UserViewModel>(author);
             return View("Post", postvm);
         }
 
@@ -54,7 +54,7 @@ namespace Blog.Controllers
             //postvm.User = _mapper.Map<User, UserViewModel>(user);
             var tagsRepository = _unitOfWork.GetRepository<Tag>() as TagsRepository;
             var tags = await tagsRepository.GetAllAsync();
-            postvm.Tags = tags.Select(t => new TagViewModel { Name = t.Name , Id = t.Id, IsChecked = false }).ToList();
+            postvm.Tags = tags.Select(t => new TagViewModel { Name = t.Name , Id = t.Id }).ToList();
 
             return View("NewPost", postvm);
         }
@@ -89,7 +89,7 @@ namespace Blog.Controllers
             //postvm.User = _mapper.Map<User, UserViewModel>(user);
             var tagsRepository = _unitOfWork.GetRepository<Tag>() as TagsRepository;
             var tags = await tagsRepository.GetAllAsync();
-            postvm.Tags = tags.Select(t => new TagViewModel { Name = t.Name, Id = t.Id, IsChecked = false }).ToList();
+            postvm.Tags = tags.Select(t => new TagViewModel { Name = t.Name, IsChecked = false }).ToList();
 
             return View("PostEdit", postvm);
         }
