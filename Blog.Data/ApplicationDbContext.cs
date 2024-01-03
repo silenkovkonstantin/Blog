@@ -27,14 +27,14 @@ namespace Blog.Data
             //Database.Migrate();
         }
 
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
+        //protected override void OnModelCreating(ModelBuilder builder)
+        //{
+        //    base.OnModelCreating(builder);
 
-            builder.ApplyConfiguration(new PostConfiguration());
-            builder.ApplyConfiguration(new CommentConfuiguration());
-            builder.ApplyConfiguration(new TagConfuiguration());
-            //builder.ApplyConfiguration(new RoleConfiguration());
-        }
+        //    builder.ApplyConfiguration(new PostConfiguration());
+        //    builder.ApplyConfiguration(new CommentConfuiguration());
+        //    builder.ApplyConfiguration(new TagConfuiguration());
+        //    //builder.ApplyConfiguration(new RoleConfiguration());
+        //}
     }
 }

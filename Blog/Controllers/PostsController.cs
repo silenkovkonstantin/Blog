@@ -50,8 +50,9 @@ namespace Blog.Controllers
         public async Task<IActionResult> NewPost()
         {
             var postvm = new PostViewModel();
-            //var user = await _userManager.GetUserAsync(User);
-            //postvm.User = _mapper.Map<User, UserViewModel>(user);
+            var user = await _userManager.GetUserAsync(User);
+            postvm.User = _mapper.Map<User, UserViewModel>(user);
+            postvm.UserId = user.Id;
             var tagsRepository = _unitOfWork.GetRepository<Tag>() as TagsRepository;
             var tags = await tagsRepository.GetAllAsync();
             postvm.Tags = tags.Select(t => new TagViewModel { Name = t.Name , Id = t.Id }).ToList();
@@ -64,11 +65,12 @@ namespace Blog.Controllers
         [HttpPost]
         public async Task<IActionResult> NewPost(PostViewModel postvm)
         {
-            var user = await _userManager.GetUserAsync(User);
-            var repository = _unitOfWork.GetRepository<Post>() as PostsRepository;
+            //var user = await _userManager.GetUserAsync(User);
+            
             var post = _mapper.Map<PostViewModel, Post>(postvm);
-            post.User = user;
-            post.UserId = user.Id;
+            //post.User = user;
+            //post.UserId = user.Id;
+            var repository = _unitOfWork.GetRepository<Post>() as PostsRepository;
             await repository.CreateAsync(post);
             var posts = await GetAllPostsAsync();
             

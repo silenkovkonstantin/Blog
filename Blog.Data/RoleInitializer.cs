@@ -12,8 +12,8 @@ namespace Blog.Data
     {
         public static async Task InitializeAsync(UserManager<User> userManager, RoleManager<Role> roleManager)
         {
-            string adminEmail = "silenkov@gmail.com";
-            string adminName = "silenkov";
+            string adminEmail = "admin111@example.com";
+            string adminName = "admin111";
             string password = "12345";
 
             if (await roleManager.FindByNameAsync("Пользователь") == null)
@@ -37,8 +37,8 @@ namespace Blog.Data
                 {
                     Email = adminEmail,
                     UserName = adminName,
-                    FirstName = "Константин",
-                    LastName = "Силенков",
+                    FirstName = "Админ",
+                    LastName = "Админ",
                 };
 
                 var result = await userManager.CreateAsync(admin, password);
