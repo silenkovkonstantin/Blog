@@ -15,13 +15,15 @@ namespace Blog.Controllers
     {
         private IMapper _mapper;
         private readonly UserManager<User> _userManager;
-        private IUnitOfWork _unitOfWork;
+        private IRepository<Post> _postsRepository;
+        private IRepository<Tag> _tagsRepository;
 
-        public PostsController(IMapper mapper, UserManager<User> userManager, IUnitOfWork unitOfWork)
+        public PostsController(IMapper mapper, UserManager<User> userManager, IRepository<Post> postsRepository, IRepository<Tag> tagsRepository)
         {
             _mapper = mapper;
             _userManager = userManager;
-            _unitOfWork = unitOfWork;
+            _postsRepository = postsRepository;
+            _tagsRepository = tagsRepository;
         }
 
         [Route("Posts")]
@@ -36,8 +38,7 @@ namespace Blog.Controllers
         [HttpGet]
         public async Task<IActionResult> Post(int id)
         {
-            var repository = _unitOfWork.GetRepository<Post>() as PostsRepository;
-            var post = await repository.GetAsync(id);
+            var post = await _postsRepository.GetAsync(id);
             var postvm = _mapper.Map<Post, PostViewModel>(post);
             //var author = await _userManager.FindByIdAsync(post.UserId);
             //postvm.User = _mapper.Map<User, UserViewModel>(author);
@@ -51,10 +52,10 @@ namespace Blog.Controllers
         {
             var postvm = new PostViewModel();
             var user = await _userManager.GetUserAsync(User);
-            postvm.User = _mapper.Map<User, UserViewModel>(user);
+            //postvm.User = _mapper.Map<User, UserViewModel>(user);
+            //postvm.User = user;
             postvm.UserId = user.Id;
-            var tagsRepository = _unitOfWork.GetRepository<Tag>() as TagsRepository;
-            var tags = await tagsRepository.GetAllAsync();
+            var tags = await _tagsRepository.GetAllAsync();
             postvm.Tags = tags.Select(t => new TagViewModel { Name = t.Name , Id = t.Id }).ToList();
 
             return View("NewPost", postvm);
@@ -70,8 +71,10 @@ namespace Blog.Controllers
             var post = _mapper.Map<PostViewModel, Post>(postvm);
             //post.User = user;
             //post.UserId = user.Id;
-            var repository = _unitOfWork.GetRepository<Post>() as PostsRepository;
-            await repository.CreateAsync(post);
+            var allTags = await _tagsRepository.GetAllAsync();
+            var tagsId = post.Tags.Select(t => t.Id);
+            post.Tags = allTags.Where(t => tagsId.Contains(t.Id)).ToList();
+            await _postsRepository.CreateAsync(post);
             var posts = await GetAllPostsAsync();
             
             //var model = _mapper.Map<IEnumerable<Post>, PostsViewModel>(posts);
@@ -84,14 +87,12 @@ namespace Blog.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var repository = _unitOfWork.GetRepository<Post>() as PostsRepository;
-            var post = await repository.GetAsync(id);
+            var post = await _postsRepository.GetAsync(id);
             var postvm = _mapper.Map<Post, PostViewModel>(post);
             //var user = await _userManager.GetUserAsync(User);
-            //postvm.User = _mapper.Map<User, UserViewModel>(user);
-            var tagsRepository = _unitOfWork.GetRepository<Tag>() as TagsRepository;
-            var tags = await tagsRepository.GetAllAsync();
-            postvm.Tags = tags.Select(t => new TagViewModel { Name = t.Name, IsChecked = false }).ToList();
+            //postvm.UserId = user.Id;
+            var tags = await _tagsRepository.GetAllAsync();
+            postvm.Tags = tags.Select(t => new TagViewModel { Name = t.Name, Id = t.Id }).ToList();
 
             return View("PostEdit", postvm);
         }
@@ -101,9 +102,14 @@ namespace Blog.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(PostViewModel postvm)
         {
-            var repository = _unitOfWork.GetRepository<Post>() as PostsRepository;
-            var post = _mapper.Map<PostViewModel, Post>(postvm);
-            await repository.UpdateAsync(post);
+            var post = await _postsRepository.GetAsync(postvm.Id);
+            post = _mapper.Map<PostViewModel, Post>(postvm, post);
+            var allTags = await _tagsRepository.GetAllAsync();
+            var tagsId = post.Tags.Select(t => t.Id);
+            post.Tags = allTags.Where(t => tagsId.Contains(t.Id)).ToList();
+            var user = await _userManager.GetUserAsync(User);
+            post.User = user;
+            await _postsRepository.UpdateAsync(post);
             var posts = await GetAllPostsAsync();
 
             return View("Posts", posts);
@@ -114,14 +120,12 @@ namespace Blog.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id, PostsViewModel postsvm)
         {
-            var postsRepository = _unitOfWork.GetRepository<Post>() as PostsRepository;
-            var commentsRepository = _unitOfWork.GetRepository<Comment>() as CommentsRepository;
-            var post = await postsRepository.GetAsync(id);
+            var post = await _postsRepository.GetAsync(id);
 
-            foreach (var comment in post.Comments)
-                await commentsRepository.DeleteAsync(comment);
+            //foreach (var comment in post.Comments)
+            //    await _commentsRepository.DeleteAsync(comment);
 
-            await postsRepository.DeleteAsync(post);
+            await _postsRepository.DeleteAsync(post);
             var posts = await GetAllPostsAsync();
             var model = _mapper.Map<IEnumerable<Post>, PostsViewModel>(posts);
 
@@ -130,18 +134,16 @@ namespace Blog.Controllers
 
         private async Task<List<Post>> GetAllPostsAsync()
         {
-            var repository = _unitOfWork.GetRepository<Post>() as PostsRepository;
-            var posts = await repository.GetAllAsync();
+            var posts = await _postsRepository.GetAllAsync();
 
             return posts.ToList();
         }
 
-        private async Task<List<Post>> GetAllPosts(User user)
-        {
-            var repository = _unitOfWork.GetRepository<Post>() as PostsRepository;
-            var posts = repository.GetAllUserPostsAsync(user.Id);
+        //private async Task<List<Post>> GetAllPosts(User user)
+        //{
+        //    var posts = _postsRepository.GetAllUserPostsAsync(user.Id);
 
-            return await posts;
-        }
+        //    return await posts;
+        //}
     }
 }

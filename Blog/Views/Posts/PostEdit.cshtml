@@ -5,8 +5,6 @@
 @{
     ViewBag.Title = "PostEdit";
     Layout = "/Views/Shared/_Layout.cshtml";
-    var user = await UserManager.GetUserAsync(User);
-    Model.UserId = user.Id;
 }
 
 <h4 class="mb-3">Редактирование статьи</h4>
@@ -14,12 +12,16 @@
 
 <form asp-controller="Posts" asp-action="Edit">
     <div asp-validation-summary="ModelOnly"></div>
+    <input asp-for="Id" type="hidden" />
+    <input asp-for="UserId" type="hidden" />
+    <input asp-for="User" type="hidden" />
     @for (int i = 0; i < Model.Tags.Count; i++)
     {
         <div class="form-check">
-            @Html.CheckBoxFor(model => model.Tags[i].IsChecked, new { @class="form-check-input", @value="", @id="flexCheckDefault", } )
+            @Html.CheckBoxFor(model => model.Tags[i].IsChecked, new { @class="form-check-input", @id="flexCheckDefault", } )
             @* <input type="checkbox" class="form-check-input" value="" id="flexCheckDefault" /> *@
             <label class="form-check-label" for="flexCheckDefault">@Model.Tags[i].Name</label>
+            @Html.HiddenFor(model => model.Tags[i].Id)
             @Html.HiddenFor(model => model.Tags[i].Name)
         </div>
     }

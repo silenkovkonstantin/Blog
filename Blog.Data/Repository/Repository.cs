@@ -20,18 +20,21 @@ namespace Blog.Data.Repository
 
         public async Task CreateAsync(T entity)
         {
-            await _context.AddAsync<T>(entity);
+            //await _context.AddAsync<T>(entity);
 
-            //var entry = _context.Entry(entity);
-            //if (entry.State == EntityState.Detached)
-            //    await entry.Context.AddAsync(entity);
+            var entry = _context.Entry(entity);
+            if (entry.State == EntityState.Detached)
+                await entry.Context.AddAsync(entity);
 
             await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(T entity)
         {
+            //_context.Update<T>(entity);
+
             var entry = _context.Entry(entity);
+            //entry.Context.Attach(entity);
             if (entry.State == EntityState.Detached)
                 entry.Context.Update(entity);
 
