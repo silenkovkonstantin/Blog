@@ -9,7 +9,10 @@ namespace Blog.Data.Models.Db
         /// </summary>
         public string Description { get; set; }
 
-        public Role() { }
+        public Role() : base()
+        {
+
+        }
         public Role(string roleName, string description)
         {
             Name = roleName;

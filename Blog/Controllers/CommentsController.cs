@@ -28,7 +28,7 @@ namespace Blog.Controllers
 
         [Authorize(Roles = "Администратор")]
         [Route("Comments")]
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Comments()
         {
             var comments = await GetAllCommentsAsync();

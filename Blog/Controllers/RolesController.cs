@@ -26,15 +26,91 @@ namespace Blog.Controllers
         [HttpGet]
         public IActionResult Roles() => View(_roleManager.Roles);
 
-        //[Authorize(Roles = "Администратор")]
-        //[Route("Edit")]
-        //[HttpGet]
-        //public async Task<IActionResult> Edit()
-        //{
-        //    var allRoles = _roleManager.Roles.ToList();
-        //    var editmodel = _mapper.Map<RoleEditViewModel>(result);
+        [Route("NewRole")]
+        [HttpGet]
+        public IActionResult NewRole()
+        {
+            return View("NewRole");
+        }
 
-        //    return View("Edit", editmodel);
-        //}
+        [Authorize(Roles = "Администратор")]
+        [Route("NewRole")]
+        [HttpPost]
+        public async Task<IActionResult> NewRole(CreateRoleViewModel rolevm)
+        {
+            if (ModelState.IsValid)
+            {
+                if (_roleManager.Roles.Select(r => r.Name).Contains(rolevm.Name))
+                {
+                    return RedirectToAction("NewRole");
+                }
+
+                var role = _mapper.Map<Role>(rolevm);
+                var result = await _roleManager.CreateAsync(role);
+
+                if (result.Succeeded)
+                {
+                    return View("Roles", _roleManager.Roles);
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+            }
+
+            return View("NewRole", rolevm);
+        }
+
+        [Authorize(Roles = "Администратор")]
+        [Route("RoleEdit")]
+        [HttpGet]
+        public async Task<IActionResult> Edit(string id)
+        {
+            var role = await _roleManager.FindByIdAsync(id);
+            var editmodel = _mapper.Map<RoleViewModel>(role);
+
+            return View("RoleEdit", editmodel);
+        }
+
+        [Authorize(Roles = "Администратор")]
+        [Route("RoleEdit")]
+        [HttpPost]
+        public async Task<IActionResult> Edit(RoleViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var role = await _roleManager.FindByIdAsync(model.Id);
+                role = _mapper.Map<RoleViewModel, Role>(model, role);
+                var result = await _roleManager.UpdateAsync(role);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Roles", "Roles");
+                }
+                else
+                {
+                    return RedirectToAction("RoleEdit", "Roles");
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "Некорректные данные");
+                return View("RoleEdit", model);
+            }
+        }
+
+        [Authorize(Roles = "Администратор")]
+        [HttpGet]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var role = await _roleManager.FindByIdAsync(id);
+            await _roleManager.DeleteAsync(role);
+            var roles = _roleManager.Roles;
+
+            return View("Roles", roles);
+        }
     }
 }

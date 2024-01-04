@@ -19,6 +19,8 @@ namespace Blog
             CreateMap<CommentViewModel, Comment>();
             CreateMap<TagViewModel, Tag>();
             CreateMap<Tag, TagViewModel>();
+            CreateMap<RoleViewModel, Role>().ReverseMap();
+            CreateMap<CreateRoleViewModel, Role>();
         }
     }
 }
