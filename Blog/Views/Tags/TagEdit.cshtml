@@ -1,13 +1,14 @@
-﻿@using Blog.Data.Models.Db;
-@model Tag
+﻿@model Blog.ViewModels.TagViewModel
 @{
     ViewBag.Title = "TagEdit";
     Layout = "/Views/Shared/_Layout.cshtml";
 }
 
 <h4 class="mb-3">Редактирование тега</h4>
+<hr class="my-4" />
 <form asp-controller="Tags" asp-action="Edit">
     <div asp-validation-summary="ModelOnly"></div>
+    <input asp-for="Id" type="hidden" />
     <div class="row g-3">
         <div class="col-12">
             <label for="tag" class="form-label">Название</label>
@@ -19,7 +20,7 @@
         </div>
     </div>
     <hr class="my-4" />
-    <button class="w-100 btn btn-primary btn-lg" type="submit">Сохранить</button>
+    <button class="btn btn-primary" type="submit">Сохранить</button>
     <div class="container">
         <a asp-area="" asp-controller="Tags" asp-action="Tags">Перейти к списку всех тегов</a>
     </div>

@@ -14,16 +14,17 @@
         <div class="form-check">
             @if (Model.Roles[i].Name == "Пользователь")
             {
-                <input type="checkbox" class="form-check-input" value="" id="flexCheckDefault" disabled checked />
-                <label class="form-check-label" for="flexCheckDefault">@Model.Roles[i].Name</label>
+                <input type="checkbox" class="form-check-input" id="flexCheckDefault" disabled checked />
             }
             else
             {
-                @Html.CheckBoxFor(model => model.Roles[i].IsChecked, new { @class="form-check-input", @value="", @id="flexCheckDefault", } )
+                @Html.CheckBoxFor(model => model.Roles[i].IsChecked, new { @class="form-check-input", @id="flexCheckDefault", } )
                 //<input type="checkbox" class="form-check-input" value="" id="flexCheckDefault" />
-                <label class="form-check-label" for="flexCheckDefault">@Model.Roles[i].Name</label>
-                @Html.HiddenFor(model => model.Roles[i].Name)
             }
+            <label class="form-check-label" for="flexCheckDefault">@Model.Roles[i].Name</label>
+            @Html.HiddenFor(model => model.Roles[i].Id)
+            @Html.HiddenFor(model => model.Roles[i].Name)
+            @Html.HiddenFor(model => model.Roles[i].Description)
         </div>
     }
     <div class="row g-3">
@@ -69,5 +70,5 @@
         </div>
     </div>
     <hr class="my-4" />
-    <button class="w-100 btn btn-primary btn-lg" type="submit">Сохранить</button>
+    <button class="btn btn-primary" type="submit">Сохранить</button>
 </form>

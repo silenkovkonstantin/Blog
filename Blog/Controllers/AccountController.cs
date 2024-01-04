@@ -88,7 +88,7 @@ namespace Blog.Controllers
         {
             var user = await _userManager.FindByIdAsync(id);
             var editmodel = _mapper.Map<UserViewModel>(user);
-            editmodel.Roles = _roleManager.Roles.Select(r => new RoleViewModel { Name = r.Name }).ToList();
+            editmodel.Roles = _roleManager.Roles.Select(r => new RoleViewModel { Id = r.Id, Name = r.Name, Description = r.Description }).ToList();
 
             return View("Edit", editmodel);
         }

@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Controllers
 {
-    public class RoleController : Controller
+    public class RolesController : Controller
     {
         private IMapper _mapper;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
 
-        public RoleController(IMapper mapper, RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
+        public RolesController(IMapper mapper, RoleManager<Role> roleManager, UserManager<User> userManager)
         {
             _mapper = mapper;
             _roleManager = roleManager;
@@ -24,7 +24,7 @@ namespace Blog.Controllers
         [Authorize(Roles = "Администратор")]
         [Route("Roles")]
         [HttpGet]
-        public IActionResult Roles() => View(_roleManager.Roles.ToList());
+        public IActionResult Roles() => View(_roleManager.Roles);
 
         //[Authorize(Roles = "Администратор")]
         //[Route("Edit")]

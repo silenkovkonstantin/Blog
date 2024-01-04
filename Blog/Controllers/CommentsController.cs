@@ -15,13 +15,15 @@ namespace Blog.Controllers
     {
         private IMapper _mapper;
         private readonly UserManager<User> _userManager;
-        private IUnitOfWork _unitOfWork;
+        private IRepository<Comment> _commentsRepository;
+        private IRepository<Post> _postsRepository;
 
-        public CommentsController(IMapper mapper, UserManager<User> userManager, IUnitOfWork unitOfWork)
+        public CommentsController(IMapper mapper, UserManager<User> userManager, IRepository<Comment> commentsRepository, IRepository<Post> postsRepository)
         {
             _mapper = mapper;
             _userManager = userManager;
-            _unitOfWork = unitOfWork;
+            _commentsRepository = commentsRepository;
+            _postsRepository = postsRepository;
         }
 
         [Authorize(Roles = "Администратор")]
@@ -29,7 +31,6 @@ namespace Blog.Controllers
         [HttpPost]
         public async Task<IActionResult> Comments()
         {
-            var repository = _unitOfWork.GetRepository<Comment>() as CommentsRepository;
             var comments = await GetAllCommentsAsync();
             var model = _mapper.Map<IEnumerable<Comment>, CommentsViewModel>(comments);
 
@@ -54,15 +55,13 @@ namespace Blog.Controllers
         public async Task<IActionResult> NewComment(CommentViewModel commentvm)
         {
             var user = await _userManager.GetUserAsync(User);
-            commentvm.User = _mapper.Map<User, UserViewModel>(user);
-            var repository = _unitOfWork.GetRepository<Comment>() as CommentsRepository;
             var comment = _mapper.Map<CommentViewModel, Comment>(commentvm);
+            comment.User = user;
             comment.UserId = user.Id;
-            await repository.CreateAsync(comment);
+            await _commentsRepository.CreateAsync(comment);
 
-            var postsRepository = _unitOfWork.GetRepository<Post>() as PostsRepository;
-            var post = await postsRepository.GetAsync(comment.PostId);
-            await postsRepository.UpdateAsync(post);
+            //var post = await _postsRepository.GetAsync(comment.PostId);
+            //await _postsRepository.UpdateAsync(post);
 
             //var comments = await repository.GetAllPostCommentsAsync(comment.PostId);
 
@@ -72,44 +71,38 @@ namespace Blog.Controllers
         [Authorize(Roles = "Администратор")]
         [Route("Update")]
         [HttpPost]
-        public async Task<IActionResult> Update(CommentsViewModel commentsvm)
+        public async Task<IActionResult> Update(CommentViewModel commentvm)
         {
-            var repository = _unitOfWork.GetRepository<Comment>() as CommentsRepository;
-            var comment = _mapper.Map<CommentsViewModel, Comment>(commentsvm);
-            await repository.UpdateAsync(comment);
-            var comments = await repository.GetAllPostCommentsAsync(comment.PostId);
-            var model = _mapper.Map<IEnumerable<Comment>, CommentsViewModel>(comments);
+            var comment = _mapper.Map<CommentViewModel, Comment>(commentvm);
+            await _commentsRepository.UpdateAsync(comment);
+            //var comments = await _commentsRepository.GetAllPostCommentsAsync(comment.PostId);
+            //var model = _mapper.Map<IEnumerable<Comment>, CommentsViewModel>(comments);
 
-            return View("Comments", model);
+            return RedirectToAction("Post", "Posts", new { id = comment.PostId });
         }
 
         [Authorize(Roles = "Администратор")]
         [Route("Delete")]
         [HttpPost]
-        public async Task<IActionResult> Delete(int id, CommentsViewModel commentsvm)
+        public async Task<IActionResult> Delete(int id)
         {
-            var repository = _unitOfWork.GetRepository<Comment>() as CommentsRepository;
             var comment = await GetCommentAsync(id);
-            await repository.DeleteAsync(comment);
-            var comments = await repository.GetAllPostCommentsAsync(comment.PostId);
-            var model = _mapper.Map<IEnumerable<Comment>, CommentsViewModel>(comments);
+            await _commentsRepository.DeleteAsync(comment);
+            //var comments = await repository.GetAllPostCommentsAsync(comment.PostId);
+            //var model = _mapper.Map<IEnumerable<Comment>, CommentsViewModel>(comments);
 
-            return View("Comments", model);
+            return RedirectToAction("Post", "Posts", new { id = comment.PostId });
         }
 
         private async Task<List<Comment>> GetAllCommentsAsync()
         {
-            var repository = _unitOfWork.GetRepository<Comment>() as CommentsRepository;
-            var comments = await repository.GetAllAsync();
-
+            var comments = await _commentsRepository.GetAllAsync();
             return comments.ToList();
         }
 
         private async Task<Comment> GetCommentAsync(int id)
         {
-            var repository = _unitOfWork.GetRepository<Comment>() as CommentsRepository;
-            var comment = await repository.GetAsync(id);
-
+            var comment = await _commentsRepository.GetAsync(id);
             return comment;
         }
     }

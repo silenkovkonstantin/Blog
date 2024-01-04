@@ -116,9 +116,9 @@ namespace Blog.Controllers
         }
 
         [Authorize(Roles = "Администратор, Модератор")]
-        [Route("Delete")]
-        [HttpPost]
-        public async Task<IActionResult> Delete(int id, PostsViewModel postsvm)
+        [Route("PostDelete")]
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
         {
             var post = await _postsRepository.GetAsync(id);
 
@@ -127,9 +127,9 @@ namespace Blog.Controllers
 
             await _postsRepository.DeleteAsync(post);
             var posts = await GetAllPostsAsync();
-            var model = _mapper.Map<IEnumerable<Post>, PostsViewModel>(posts);
+            //var model = _mapper.Map<IEnumerable<Post>, PostsViewModel>(posts);
 
-            return View("Posts", model);
+            return View("Posts", posts);
         }
 
         private async Task<List<Post>> GetAllPostsAsync()
