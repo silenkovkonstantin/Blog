@@ -53,5 +53,10 @@ namespace Blog.Data.Repository
         {
             return await _context.Set<T>().FindAsync(id);
         }
+
+        public virtual async Task<IEnumerable<T>> GetAllByUserIdAsync(string id)
+        {
+            return await _context.Set<T>().ToArrayAsync();
+        }
     }
 }

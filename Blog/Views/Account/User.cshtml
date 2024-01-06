@@ -1,0 +1,48 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using Blog.Data.Models.Db;
+@inject UserManager<User> UserManager;
+@model User;
+@{
+    ViewBag.Title = "User";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h4 class="mb-3">@(Model.FirstName + " " + Model.LastName)</h4>
+<div class="container">
+    <p>Никнейм: @Model.UserName</p>
+    <p>Email: @Model.Email</p>
+</div>
+<hr class="my-4" />
+<p><strong>Статьи</strong></p>
+<div class="container">
+    @if (Model.Posts.Count() != 0)
+    {
+        @foreach (var post in Model.Posts)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a asp-controller="Posts" asp-action="Post" asp-route-id="@post.Id">@post.Title</a>
+                    </h5>
+                    <p class="lead">@post.Description</p>
+                </div>
+            </div>
+        }
+    }
+</div>
+<hr class="my-4" />
+<p><strong>Комментарии</strong></p>
+<div class="container">
+    @if (Model.Comments.Count() != 0)
+    {
+        @foreach (var comment in Model.Comments)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-text">@comment.Text</p>
+                </div>
+            </div>
+        }
+    }
+</div>

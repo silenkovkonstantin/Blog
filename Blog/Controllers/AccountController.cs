@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Blog.Data;
+using Blog.Data.Repository;
 
 namespace Blog.Controllers
 {
@@ -19,15 +20,18 @@ namespace Blog.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<Role> _roleManager;
-        private IUnitOfWork _unitOfWork;
+        private IRepository<Post> _postsRepository;
+        private IRepository<Comment> _commentRepository;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager, IMapper mapper, IUnitOfWork unitOfWork)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager,
+            IMapper mapper, IRepository<Post> postsRepository, IRepository<Comment> commentRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _mapper = mapper;
-            _unitOfWork = unitOfWork;
+            _postsRepository = postsRepository;
+            _commentRepository = commentRepository;
         }
 
         
@@ -174,6 +178,17 @@ namespace Blog.Controllers
             return RedirectToAction("Posts", "Posts");
         }
 
+        [Authorize(Roles = "Администратор")]
+        [HttpGet]
+        public async Task<IActionResult> User(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            var userPosts = await _postsRepository.GetAllByUserIdAsync(id);
+            user.Posts = userPosts.ToList();
+            var userComments = await _commentRepository.GetAllByUserIdAsync(id);
+            user.Comments = userComments.ToList();
 
+            return View("User", user);
+        }
     }
 }

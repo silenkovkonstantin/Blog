@@ -32,9 +32,9 @@ namespace Blog.Controllers
         public async Task<IActionResult> Comments()
         {
             var comments = await GetAllCommentsAsync();
-            var model = _mapper.Map<IEnumerable<Comment>, CommentsViewModel>(comments);
+            //var model = _mapper.Map<IEnumerable<Comment>, CommentsViewModel>(comments);
 
-            return View("Comments", model);
+            return View("Comments", comments);
         }
 
         //[HttpGet]

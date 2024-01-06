@@ -33,10 +33,6 @@ namespace Blog
 
             services.AddSingleton(mapper);
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite($"Data Source={_env.ContentRootPath}/BlogDb.db"));
-            services.AddUnitOfWork();
-            services.AddCustomRepository<Post, PostsRepository>();
-            services.AddCustomRepository<Comment, CommentsRepository>();
-            services.AddCustomRepository<Tag, TagsRepository>();
             services.AddIdentity<User, Role>(opts =>
                 {
                     opts.Password.RequiredLength = 5;
@@ -46,27 +42,13 @@ namespace Blog
                     opts.Password.RequireUppercase = false;
                     opts.SignIn.RequireConfirmedAccount = false;
                     opts.SignIn.RequireConfirmedEmail = false;
-                    //opts.ClaimsIdentit
                 })
-                //.AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            //services.AddAuthentication(options => options.DefaultScheme = "Cookies")
-            //    .AddCookie("Cookies", options =>
-            //    {
-            //        options.Events = new Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationEvents
-            //        {
-            //            OnRedirectToLogin = RedirectContext =>
-            //            {
-            //                RedirectContext.HttpContext.Response.StatusCode = 401;
-            //                return Task.CompletedTask;
-            //            }
-            //        };
-            //    });
-
-            //services.AddAuthorization();
-            //services.AddMvc();
+            services.AddScoped<IRepository<Post>, PostsRepository>();
+            services.AddScoped<IRepository<Comment>, CommentsRepository>();
+            services.AddScoped<IRepository<Tag>, TagsRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

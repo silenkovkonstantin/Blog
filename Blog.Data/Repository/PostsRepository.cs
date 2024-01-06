@@ -32,12 +32,12 @@ namespace Blog.Data.Repository
                 .ToArrayAsync();
         }
 
-        public async Task<List<Post>> GetAllUserPostsAsync(string id)
+        public override async Task<IEnumerable<Post>> GetAllByUserIdAsync(string id)
         {
-            Set.Include(x => x.User);
-
-            var userPosts = Set.AsEnumerable().Where(x => x.User.Id == id).ToList();
-            return await Task.Run(() => userPosts);
+            return await _context.Set<Post>()
+                .Include(x => x.User)
+                .Where(p => p.UserId == id)
+                .ToArrayAsync();
         }
     }
 }
