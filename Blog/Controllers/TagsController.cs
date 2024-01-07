@@ -11,11 +11,13 @@ namespace Blog.Controllers
     {
         private IMapper _mapper;
         private IRepository<Tag> _tagsRepository;
+        private ILogger<TagsController> _logger;
 
-        public TagsController(IMapper mapper, IRepository<Tag> tagsRepository)
+        public TagsController(IMapper mapper, IRepository<Tag> tagsRepository, ILogger<TagsController> logger)
         {
             _mapper = mapper;
             _tagsRepository = tagsRepository;
+            _logger = logger;
         }
 
         [Authorize(Roles = "Модератор, Пользователь")]
@@ -48,6 +50,7 @@ namespace Blog.Controllers
             }
 
             await _tagsRepository.CreateAsync(tag);
+            _logger.LogInformation($"Добавлен новый тег {tag.Id}");
             var tags = await GetAllTagsAsync();
 
             return View("Tags", tags);
@@ -59,6 +62,7 @@ namespace Blog.Controllers
         {
             var tag = await GetTagAsync(id);
             var tagvm = _mapper.Map<TagViewModel>(tag);
+
             return View("TagEdit", tagvm);
         }
 
@@ -70,6 +74,7 @@ namespace Blog.Controllers
             var tag = await _tagsRepository.GetAsync(tagvm.Id);
             tag = _mapper.Map<TagViewModel, Tag>(tagvm, tag);
             await _tagsRepository.UpdateAsync(tag);
+            _logger.LogInformation($"Изменен тег {tag.Id}");
             var tags = await GetAllTagsAsync();
 
             return View("Tags", tags);
@@ -81,6 +86,7 @@ namespace Blog.Controllers
         {
             var tag = await GetTagAsync(id);
             await _tagsRepository.DeleteAsync(tag);
+            _logger.LogInformation($"Удален тег {tag.Id}");
             var tags = await GetAllTagsAsync();
 
             return View("Tags", tags);

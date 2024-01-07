@@ -14,13 +14,16 @@ namespace Blog.Controllers
         private readonly UserManager<User> _userManager;
         private IRepository<Comment> _commentsRepository;
         private IRepository<Post> _postsRepository;
+        private readonly ILogger<CommentsController> _logger;
 
-        public CommentsController(IMapper mapper, UserManager<User> userManager, IRepository<Comment> commentsRepository, IRepository<Post> postsRepository)
+        public CommentsController(IMapper mapper, UserManager<User> userManager, IRepository<Comment> commentsRepository, 
+            IRepository<Post> postsRepository, ILogger<CommentsController> logger)
         {
             _mapper = mapper;
             _userManager = userManager;
             _commentsRepository = commentsRepository;
             _postsRepository = postsRepository;
+            _logger = logger;
         }
 
         [Authorize(Roles = "Модератор")]
@@ -29,22 +32,9 @@ namespace Blog.Controllers
         public async Task<IActionResult> Comments()
         {
             var comments = await GetAllCommentsAsync();
-            //var model = _mapper.Map<IEnumerable<Comment>, CommentsViewModel>(comments);
 
             return View("Comments", comments);
         }
-
-        //[HttpGet]
-        //public async Task<IActionResult> NewComment(int postid)
-        //{
-        //    var user = await _userManager.GetUserAsync(User);
-        //    var commentvm = new CommentViewModel()
-        //    {
-        //        PostId = postid,
-        //        User = _mapper.Map<User, UserViewModel>(user),
-        //    };
-        //    return View("NewComment", commentvm);
-        //}
 
         [Authorize(Roles = "Администратор, Модератор, Пользователь")]
         [Route("NewComment")]
@@ -56,11 +46,7 @@ namespace Blog.Controllers
             comment.User = user;
             comment.UserId = user.Id;
             await _commentsRepository.CreateAsync(comment);
-
-            //var post = await _postsRepository.GetAsync(comment.PostId);
-            //await _postsRepository.UpdateAsync(post);
-
-            //var comments = await repository.GetAllPostCommentsAsync(comment.PostId);
+            _logger.LogInformation($"Пользователь {comment.UserId} добавил новый комментарий {comment.Id}");
 
             return RedirectToAction("Post", "Posts", new { id = comment.PostId });
         }
@@ -72,8 +58,7 @@ namespace Blog.Controllers
         {
             var comment = _mapper.Map<CommentViewModel, Comment>(commentvm);
             await _commentsRepository.UpdateAsync(comment);
-            //var comments = await _commentsRepository.GetAllPostCommentsAsync(comment.PostId);
-            //var model = _mapper.Map<IEnumerable<Comment>, CommentsViewModel>(comments);
+            _logger.LogInformation($"Изменен комментарий {comment.Id}");
 
             return RedirectToAction("Post", "Posts", new { id = comment.PostId });
         }
@@ -85,8 +70,7 @@ namespace Blog.Controllers
         {
             var comment = await GetCommentAsync(id);
             await _commentsRepository.DeleteAsync(comment);
-            //var comments = await repository.GetAllPostCommentsAsync(comment.PostId);
-            //var model = _mapper.Map<IEnumerable<Comment>, CommentsViewModel>(comments);
+            _logger.LogInformation($"Удален комментарий {comment.Id}");
 
             return RedirectToAction("Post", "Posts", new { id = comment.PostId });
         }

@@ -13,12 +13,14 @@ namespace Blog.Controllers
         private IMapper _mapper;
         private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
+        private readonly ILogger<RolesController> _logger;
 
-        public RolesController(IMapper mapper, RoleManager<Role> roleManager, UserManager<User> userManager)
+        public RolesController(IMapper mapper, RoleManager<Role> roleManager, UserManager<User> userManager, ILogger<RolesController> logger)
         {
             _mapper = mapper;
             _roleManager = roleManager;
             _userManager = userManager;
+            _logger = logger;
         }
 
         [Authorize(Roles = "Администратор")]
@@ -50,6 +52,7 @@ namespace Blog.Controllers
 
                 if (result.Succeeded)
                 {
+                    _logger.LogInformation($"Добавлена новая роль {role.Id}");
                     return View("Roles", _roleManager.Roles);
                 }
                 else
@@ -88,6 +91,7 @@ namespace Blog.Controllers
 
                 if (result.Succeeded)
                 {
+                    _logger.LogInformation($"Изменена роль {role.Id}");
                     return RedirectToAction("Roles", "Roles");
                 }
                 else
@@ -108,6 +112,7 @@ namespace Blog.Controllers
         {
             var role = await _roleManager.FindByIdAsync(id);
             await _roleManager.DeleteAsync(role);
+            _logger.LogInformation($"Удалена роль {role.Id}");
             var roles = _roleManager.Roles;
 
             return View("Roles", roles);

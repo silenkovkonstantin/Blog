@@ -17,9 +17,10 @@ namespace Blog.Controllers
         private readonly RoleManager<Role> _roleManager;
         private IRepository<Post> _postsRepository;
         private IRepository<Comment> _commentRepository;
+        private readonly ILogger<AccountController> _logger;
 
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager,
-            IMapper mapper, IRepository<Post> postsRepository, IRepository<Comment> commentRepository)
+            IMapper mapper, IRepository<Post> postsRepository, IRepository<Comment> commentRepository, ILogger<AccountController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -27,6 +28,7 @@ namespace Blog.Controllers
             _mapper = mapper;
             _postsRepository = postsRepository;
             _commentRepository = commentRepository;
+            _logger = logger;
         }
 
         
@@ -99,19 +101,17 @@ namespace Blog.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByIdAsync(model.Id);
-                //user.Convert(model);
-
                 user = _mapper.Map<UserEditViewModel, User>(model, user);
-
                 var rolesList = model.Roles;
-
                 await _userManager.AddToRolesAsync(user, model.Roles.Where(r => r.IsChecked == true).Select(r => r.Name));
                 var result = await _userManager.UpdateAsync(user);
 
-                var roles = await _userManager.GetRolesAsync(user);
+                //var roles = await _userManager.GetRolesAsync(user);
 
                 if (result.Succeeded)
                 {
+                    _logger.LogInformation($"Изменены данные пользователя {user.Id}");
+
                     return RedirectToAction("Users", "Account");
                 }
                 else
@@ -139,6 +139,8 @@ namespace Blog.Controllers
 
                 if (result.Succeeded)
                 {
+                    _logger.LogInformation($"Пользователь {user.Id} вошел в систему");
+
                     // Проверяем, принадлежит ли URL приложению
                     if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                     {
@@ -169,6 +171,7 @@ namespace Blog.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
+            _logger.LogInformation($"Пользователь {HttpContext.User.Identity.Name} вышел из системы");
             return RedirectToAction("Posts", "Posts");
         }
 

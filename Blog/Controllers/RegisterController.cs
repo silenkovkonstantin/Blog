@@ -13,12 +13,15 @@ namespace Blog.Controllers
         private IMapper _mapper;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly ILogger<RegisterController> _logger;
 
-        public RegisterController(IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager)
+        public RegisterController(IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager,
+            ILogger<RegisterController> logger)
         {
             _mapper = mapper;
             _userManager = userManager;
             _signInManager = signInManager;
+            _logger = logger;
         }
 
         [Route("Register")]
@@ -42,6 +45,8 @@ namespace Blog.Controllers
                     // Установка куки
                     await _userManager.AddToRoleAsync(user, "Пользователь");
                     await _signInManager.SignInAsync(user, false);
+                    _logger.LogInformation($"Зарегистрирован новый пользователь {user.Id}");
+
                     return RedirectToAction("Index", "Home");
                 }
                 else
