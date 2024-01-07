@@ -27,9 +27,23 @@ namespace Blog.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        //public IActionResult Error()
+        //{
+        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        //}
+
+        public IActionResult Error(int? statusCode = null)
         {
+            if (statusCode.HasValue)
+            {
+                if (statusCode == 403 || statusCode == 404 || statusCode == 500)
+                {
+                    var viewName = statusCode.ToString();
+                    return View(viewName);
+                }
+            }
+
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }

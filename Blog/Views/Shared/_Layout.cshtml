@@ -17,31 +17,46 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarsExample07XL">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Comments" asp-action="Comments">
-                                Комментарии
-                            </a>
-                        </li>
+                        @if (User.IsInRole("Модератор"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Comments" asp-action="Comments">
+                                    Комментарии
+                                </a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Tags" asp-action="Tags">
                                 Теги
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Users">
-                                Пользователи
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Roles" asp-action="Roles">
-                                Роли
-                            </a>
-                        </li>
+                        @if (User.IsInRole("Администратор"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Users">
+                                    Пользователи
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Roles" asp-action="Roles">
+                                    Роли
+                                </a>
+                            </li>
+                        }
                     </ul>
                     <div class="d-lg-flex col-lg-3 justify-content-lg-end">
-                        <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Logout">
-                            Выйти
-                        </a>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Logout">
+                                Выйти
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Host.ToString()">
+                                Войти
+                            </a>
+                        }
                     </div>
                 </div>
             </div>

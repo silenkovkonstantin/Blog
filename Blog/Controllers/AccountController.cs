@@ -1,14 +1,9 @@
 ﻿using AutoMapper;
-using Blog.Data.UoW;
-using Blog.Extensions;
 using Blog.Data.Models.Db;
 using Blog.ViewModels;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using Blog.Data;
 using Blog.Data.Repository;
 
@@ -63,13 +58,12 @@ namespace Blog.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [Route("Login")]
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View("Login");
-        }
-
+        //[Route("Login")]
+        //[HttpGet]
+        //public IActionResult Login()
+        //{
+        //    return View("Login");
+        //}
         [HttpGet]
         public IActionResult Login(string returnUrl = null)
         {
@@ -91,7 +85,7 @@ namespace Blog.Controllers
         public async Task<IActionResult> Edit(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-            var editmodel = _mapper.Map<UserViewModel>(user);
+            var editmodel = _mapper.Map<UserEditViewModel>(user);
             editmodel.Roles = _roleManager.Roles.Select(r => new RoleViewModel { Id = r.Id, Name = r.Name, Description = r.Description }).ToList();
 
             return View("Edit", editmodel);
@@ -100,14 +94,14 @@ namespace Blog.Controllers
         [Authorize(Roles = "Администратор")]
         [Route("Edit")]
         [HttpPost]
-        public async Task<IActionResult> Edit(UserViewModel model)
+        public async Task<IActionResult> Edit(UserEditViewModel model)
         {
             if (ModelState.IsValid)
             {
-                //var user = await _userManager.FindByEmailAsync(model.Email);
+                var user = await _userManager.FindByIdAsync(model.Id);
                 //user.Convert(model);
 
-                var user = _mapper.Map<User>(model);
+                user = _mapper.Map<UserEditViewModel, User>(model, user);
 
                 var rolesList = model.Roles;
 
@@ -132,7 +126,7 @@ namespace Blog.Controllers
             }
         }
 
-        [Route("Login")]
+        //[Route("Login")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)

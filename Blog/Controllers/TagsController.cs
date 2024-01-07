@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
 using Blog.Data.Repository;
-using Blog.Data.UoW;
 using Blog.Data.Models.Db;
 using Blog.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
 
 namespace Blog.Controllers
 {
@@ -21,7 +18,7 @@ namespace Blog.Controllers
             _tagsRepository = tagsRepository;
         }
 
-        [Authorize(Roles = "Администратор")]
+        [Authorize(Roles = "Модератор, Пользователь")]
         [Route("Tags")]
         [HttpGet]
         public async Task<IActionResult> Tags()
@@ -38,7 +35,7 @@ namespace Blog.Controllers
             return View("NewTag");
         }
 
-        [Authorize(Roles = "Администратор")]
+        [Authorize(Roles = "Пользователь")]
         [Route("NewTag")]
         [HttpPost]
         public async Task<IActionResult> NewTag(Tag tag)
@@ -65,7 +62,7 @@ namespace Blog.Controllers
             return View("TagEdit", tagvm);
         }
 
-        [Authorize(Roles = "Администратор")]
+        [Authorize(Roles = "Модератор")]
         [Route("TagEdit")]
         [HttpPost]
         public async Task<IActionResult> Edit(TagViewModel tagvm)
@@ -78,7 +75,7 @@ namespace Blog.Controllers
             return View("Tags", tags);
         }
 
-        [Authorize(Roles = "Администратор")]
+        [Authorize(Roles = "Модератор")]
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {

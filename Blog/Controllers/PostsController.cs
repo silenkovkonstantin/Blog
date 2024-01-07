@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
 using Blog.Data.Repository;
-using Blog.Data.UoW;
-using Blog.Extensions;
 using Blog.Data.Models.Db;
 using Blog.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -45,7 +42,7 @@ namespace Blog.Controllers
             return View("Post", postvm);
         }
 
-        [Authorize(Roles = "Администратор, Модератор")]
+        [Authorize(Roles = "Пользователь")]
         [Route("NewPost")]
         [HttpGet]
         public async Task<IActionResult> NewPost()
@@ -61,7 +58,7 @@ namespace Blog.Controllers
             return View("NewPost", postvm);
         }
 
-        [Authorize(Roles = "Администратор, Модератор")]
+        [Authorize(Roles = "Пользователь")]
         [Route("NewPost")]
         [HttpPost]
         public async Task<IActionResult> NewPost(PostViewModel postvm)
@@ -82,7 +79,7 @@ namespace Blog.Controllers
             return View("Posts", posts);
         }
 
-        [Authorize(Roles = "Администратор, Модератор")]
+        [Authorize(Roles = "Модератор")]
         [Route("PostEdit")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
@@ -97,7 +94,7 @@ namespace Blog.Controllers
             return View("PostEdit", postvm);
         }
 
-        [Authorize(Roles = "Администратор, Модератор")]
+        [Authorize(Roles = "Модератор")]
         [Route("PostEdit")]
         [HttpPost]
         public async Task<IActionResult> Edit(PostViewModel postvm)
@@ -115,7 +112,7 @@ namespace Blog.Controllers
             return View("Posts", posts);
         }
 
-        [Authorize(Roles = "Администратор, Модератор")]
+        [Authorize(Roles = "Модератор")]
         [Route("PostDelete")]
         [HttpGet]
         public async Task<IActionResult> Delete(int id)

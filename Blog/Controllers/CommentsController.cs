@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
 using Blog.Data.Repository;
-using Blog.Data.UoW;
 using Blog.Data.Models.Db;
 using Blog.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
-using NuGet.Protocol.Core.Types;
 
 namespace Blog.Controllers
 {
@@ -26,7 +23,7 @@ namespace Blog.Controllers
             _postsRepository = postsRepository;
         }
 
-        [Authorize(Roles = "Администратор")]
+        [Authorize(Roles = "Модератор")]
         [Route("Comments")]
         [HttpGet]
         public async Task<IActionResult> Comments()
@@ -68,7 +65,7 @@ namespace Blog.Controllers
             return RedirectToAction("Post", "Posts", new { id = comment.PostId });
         }
 
-        [Authorize(Roles = "Администратор")]
+        [Authorize(Roles = "Модератор")]
         [Route("Update")]
         [HttpPost]
         public async Task<IActionResult> Update(CommentViewModel commentvm)
@@ -81,7 +78,7 @@ namespace Blog.Controllers
             return RedirectToAction("Post", "Posts", new { id = comment.PostId });
         }
 
-        [Authorize(Roles = "Администратор")]
+        [Authorize(Roles = "Модератор")]
         [Route("Delete")]
         [HttpPost]
         public async Task<IActionResult> Delete(int id)

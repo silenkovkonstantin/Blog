@@ -12,6 +12,7 @@ namespace Blog
             CreateMap<LoginViewModel, User>();
             CreateMap<User, UserViewModel>();
             CreateMap<UserViewModel, User>();
+            CreateMap<UserEditViewModel, User>().ReverseMap();
             CreateMap<PostViewModel, Post>()
                 .ForMember(x => x.Tags, opt => opt.MapFrom(src => src.Tags.Where(t => t.IsChecked == true)));
             CreateMap<Post, PostViewModel>();

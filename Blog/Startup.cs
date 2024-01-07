@@ -59,14 +59,15 @@ namespace Blog
             }
             else
             {
+                app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
                 app.UseExceptionHandler("/Error");
-                app.UseHsts();
             }
 
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
