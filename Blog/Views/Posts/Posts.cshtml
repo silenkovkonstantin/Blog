@@ -7,9 +7,12 @@
 
 <br />
 <h4 class="mb-3">Все статьи</h4>
-<div class="container">
-    <a asp-area="" asp-controller="Posts" asp-action="NewPost">Добавить статью</a>
-</div>
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="container">
+        <a asp-area="" asp-controller="Posts" asp-action="NewPost">Добавить статью</a>
+    </div>
+}
 <hr class="my-4" />
 <form asp-controller="Posts" asp-action="Posts">
     <div asp-validation-summary="ModelOnly"></div>

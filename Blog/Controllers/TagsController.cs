@@ -30,6 +30,7 @@ namespace Blog.Controllers
             return View("Tags", tags);
         }
 
+
         [Route("NewTag")]
         [HttpGet]
         public IActionResult NewTag()

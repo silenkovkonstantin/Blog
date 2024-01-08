@@ -1,4 +1,5 @@
 ﻿using Blog.Data.Models;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -37,7 +38,10 @@ namespace Blog.Controllers
         {
             if (statusCode.HasValue)
             {
-                if (statusCode == 403 || statusCode == 404 || statusCode == 500)
+                var exceptionHandlerPathFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+                _logger.LogError(exceptionHandlerPathFeature.Error.Message);
+
+                if (statusCode == 403 || statusCode == 404)
                 {
                     var viewName = statusCode.ToString();
                     return View(viewName);

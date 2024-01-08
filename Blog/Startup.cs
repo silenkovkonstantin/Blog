@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Diagnostics;
+using System.Net;
 
 namespace Blog
 {
@@ -60,13 +62,23 @@ namespace Blog
             else
             {
                 app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
-                app.UseExceptionHandler("/Error");
+                app.UseExceptionHandler("/Error/500");
+                app.UseHsts();
             }
 
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            // Генерируем исключение
+            //app.Run(async (context) =>
+            //{
+            //    int a = 5;
+            //    int b = 0;
+            //    int c = a / b;
+            //    await context.Response.WriteAsync($"c = {c}");
+            //});
 
             app.UseEndpoints(endpoints =>
             {
