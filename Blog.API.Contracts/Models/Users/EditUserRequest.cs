@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BlogAPI.Contracts.Models.Roles;
+using System.ComponentModel.DataAnnotations;
 
 namespace BlogAPI.Contracts.Models.Users
 {
-    public class EditUserRequest : UserView
+    public class EditUserRequest : AddUserRequest
     {
-        public string Id { get; set; }
+        public List<RoleView> Roles { get; set; }
     }
 }

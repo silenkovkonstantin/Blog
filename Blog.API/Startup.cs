@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Blog.Data;
 using Blog.Data.Repository;
-using Blog.Extensions;
 using Blog.Data.Models.Db;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Diagnostics;
 using System.Net;
+using FluentValidation.AspNetCore;
+using BlogAPI.Contracts.Validation;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
+using System.Reflection;
 
 namespace BlogAPI
 {
@@ -22,11 +26,11 @@ namespace BlogAPI
             Configuration = configuration;
         }
 
+        [Obsolete]
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-
-            //string connection = Configuration.GetConnectionString("DefaultConnecton");
+            string connection = Configuration.GetConnectionString("DefaultConnecton");
             var mapperConfig = new MapperConfiguration((v) =>
             {
                 v.AddProfile(new MappingProfile());
@@ -34,7 +38,7 @@ namespace BlogAPI
             IMapper mapper = mapperConfig.CreateMapper();
 
             services.AddSingleton(mapper);
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite($"Data Source={_env.ContentRootPath}/BlogDb.db"));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(connection));
             services.AddIdentity<User, Role>(opts =>
                 {
                     opts.Password.RequiredLength = 5;
@@ -49,8 +53,18 @@ namespace BlogAPI
                 .AddDefaultTokenProviders();
 
             services.AddScoped<IRepository<Post>, PostsRepository>();
-            services.AddScoped<IRepository<Comment>, CommentsRepository>();
+            //services.AddScoped<IRepository<Comment>, CommentsRepository>();
             services.AddScoped<IRepository<Tag>, TagsRepository>();
+            services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AddPostRequestValidator>());
+            services.AddSwaggerGen(c => 
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "BlogApi", Version = "v1" });
+                c.ExampleFilters();
+                //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                //c.IncludeXmlComments(xmlPath);
+            });
+            services.AddSwaggerExamplesFromAssemblyOf<Startup>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -58,33 +72,17 @@ namespace BlogAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
-                app.UseExceptionHandler("/Error/500");
-                app.UseHsts();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BlogApi v1"));
             }
 
-            app.UseStaticFiles();
+            app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
-            // Генерируем исключение
-            //app.Run(async (context) =>
-            //{
-            //    int a = 5;
-            //    int b = 0;
-            //    int c = a / b;
-            //    await context.Response.WriteAsync($"c = {c}");
-            //});
-
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllers();
             });
         }
     }

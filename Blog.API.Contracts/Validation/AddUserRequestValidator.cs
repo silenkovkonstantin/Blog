@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace BlogAPI.Contracts.Validation
 {
-    public class UserAddRequestValidator : AbstractValidator<AddUserRequest>
+    public class AddUserRequestValidator : AbstractValidator<AddUserRequest>
     {
-        public UserAddRequestValidator()
+        public AddUserRequestValidator()
         {
             RuleFor(x => x.Email).NotEmpty().EmailAddress();
             RuleFor(x => x.FirstName).NotEmpty();

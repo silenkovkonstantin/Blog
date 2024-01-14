@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using BlogAPI.Contracts.Models.Tags;
 using NuGet.Protocol.Plugins;
-using static BlogAPI.Contracts.Models.Tags.GetTagsRequest;
+using static BlogAPI.Contracts.Models.Tags.GetTagsResponse;
 
 namespace BlogAPI.Controllers
 {
@@ -33,14 +33,14 @@ namespace BlogAPI.Controllers
         /// <response code="200">Success</response>
         /// <response code="401">If the user is unauthorized</response>
         [HttpGet]
-        [Route("Tags")]
+        [Route("")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Tags()
         {
             var tags = await GetAllTagsAsync();
-            var request = new GetTagsRequest
+            var request = new GetTagsResponse
             {
                 TagAmount = tags.Count,
                 Tags = _mapper.Map<List<Tag>, List<TagView>>(tags)
@@ -53,18 +53,18 @@ namespace BlogAPI.Controllers
         /// Добавление нового тега
         /// </summary>
         /// <remarks>
-        /// POST /Tags/NewTag
+        /// POST /Tags/Add
         /// </remarks>
         /// <param name="request">AddTagRequest object</param>
         /// <returns>Добавляет новый тег</returns>
         /// <response code="201">Create a tag in the system</response>
         /// <response code="400">Unable to create the tag due to validation error</response>
         [HttpPost]
-        [Route("NewTag")]
+        [Route("[action]")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> NewTag([FromBody] AddTagRequest request)
+        public async Task<IActionResult> Add([FromBody] AddTagRequest request)
         {
             var allTags = await GetAllTagsAsync();
             
@@ -91,7 +91,7 @@ namespace BlogAPI.Controllers
         /// <response code="200">Success</response>
         /// <response code="401">If the user is unauthorized</response>
         [HttpPatch]
-        [Route("Tags/Edit/id")]
+        [Route("[action]/{id}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -120,7 +120,7 @@ namespace BlogAPI.Controllers
         /// <response code="200">Success</response>
         /// <response code="401">If the user is unauthorized</response>
         [HttpDelete]
-        [Route("Tags/Delete/id")]
+        [Route("[action]/{id}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

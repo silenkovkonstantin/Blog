@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using Blog.Data.Models.Db;
-using Blog.ViewModels;
 using BlogAPI.Contracts.Models;
+using BlogAPI.Contracts.Models.Posts;
+using BlogAPI.Contracts.Models.Roles;
 using BlogAPI.Contracts.Models.Tags;
 using BlogAPI.Contracts.Models.Users;
-using static BlogAPI.Contracts.Models.Tags.GetTagsRequest;
+using static BlogAPI.Contracts.Models.Tags.GetTagsResponse;
 
 namespace BlogAPI
 {
@@ -17,12 +18,11 @@ namespace BlogAPI
             CreateMap<Tag, TagView>();
             CreateMap<AddTagRequest, Tag>();
             CreateMap<EditTagRequest, Tag>();
-
-            CreateMap<PostViewModel, Post>()
+            CreateMap<AddPostRequest, Post>()
                 .ForMember(x => x.Tags, opt => opt.MapFrom(src => src.Tags.Where(t => t.IsChecked == true)));
-            CreateMap<Post, PostViewModel>();
-            CreateMap<Comment, CommentViewModel>();
-            CreateMap<CommentViewModel, Comment>();
+            CreateMap<EditPostRequest, Post>()
+                .ForMember(x => x.Tags, opt => opt.MapFrom(src => src.Tags.Where(t => t.IsChecked == true)));
+            CreateMap<RoleView, Role>();
         }
     }
 }
