@@ -91,7 +91,7 @@ namespace BlogAPI.Controllers
         /// Просмотр пользователя по id
         /// </summary>
         /// <remarks>
-        /// POST /Users/id
+        /// POST /Users/User/id
         /// </remarks>
         /// <param name="id">User id (string)</param>
         /// <returns>Возвращает запрашиваемого пользователя</returns>
@@ -110,12 +110,14 @@ namespace BlogAPI.Controllers
                 return StatusCode(400, $"Ошибка: Пользователь с данным id не найден. Проверьте корректность ввода!");
             }
 
-            var userPosts = await _postsRepository.GetAllByUserIdAsync(id);
-            user.Posts = userPosts.ToList();
-            var userComments = await _commentRepository.GetAllByUserIdAsync(id);
-            user.Comments = userComments.ToList();
+            //var userPosts = await _postsRepository.GetAllByUserIdAsync(id);
+            //user.Posts = userPosts.ToList();
+            //var userComments = await _commentRepository.GetAllByUserIdAsync(id);
+            //user.Comments = userComments.ToList();
 
-            return StatusCode(200, user);
+            var response = _mapper.Map<UserView>(user);
+
+            return StatusCode(200, response);
         }
 
         /// <summary>

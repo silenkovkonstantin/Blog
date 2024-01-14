@@ -30,7 +30,7 @@ namespace BlogAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            string connection = Configuration.GetConnectionString("DefaultConnecton");
+            string connection = Configuration.GetConnectionString("DefaultConnection");
             var mapperConfig = new MapperConfiguration((v) =>
             {
                 v.AddProfile(new MappingProfile());
@@ -53,7 +53,7 @@ namespace BlogAPI
                 .AddDefaultTokenProviders();
 
             services.AddScoped<IRepository<Post>, PostsRepository>();
-            //services.AddScoped<IRepository<Comment>, CommentsRepository>();
+            services.AddScoped<IRepository<Comment>, CommentsRepository>();
             services.AddScoped<IRepository<Tag>, TagsRepository>();
             services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AddPostRequestValidator>());
             services.AddSwaggerGen(c => 

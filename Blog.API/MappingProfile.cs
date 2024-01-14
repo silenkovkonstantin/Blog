@@ -23,6 +23,7 @@ namespace BlogAPI
             CreateMap<EditPostRequest, Post>()
                 .ForMember(x => x.Tags, opt => opt.MapFrom(src => src.Tags.Where(t => t.IsChecked == true)));
             CreateMap<RoleView, Role>();
+            CreateMap<Post, PostView>();
         }
     }
 }

@@ -76,7 +76,9 @@ namespace BlogAPI.Controllers
                 return StatusCode(400, $"Ошибка: Статья с идентификатором: \"{id}\" не найдена. Проверьте корректность ввода!");
             }
 
-            return StatusCode(200, post);
+            var response = _mapper.Map<PostView>(post);
+
+            return StatusCode(200, response);
         }
 
         /// <summary>
@@ -99,7 +101,7 @@ namespace BlogAPI.Controllers
             var user = await _userManager.FindByIdAsync(request.UserId);
             if (user == null)
             {
-                return StatusCode(400, $"Ошибка: Пользователь {request.UserId} не зарегестрирован. Сначала пройдите регистрацию!");
+                return StatusCode(400, $"Ошибка: Пользователь \"{request.UserId}\" не зарегестрирован. Сначала пройдите регистрацию!");
             }
                 
             var post = _mapper.Map<AddPostRequest, Post>(request);
@@ -132,13 +134,13 @@ namespace BlogAPI.Controllers
             var user = await _userManager.FindByIdAsync(request.UserId);
             if (user == null)
             {
-                return StatusCode(400, $"Ошибка: Пользователь {request.UserId} не зарегестрирован. Сначала пройдите регистрацию!");
+                return StatusCode(400, $"Ошибка: Пользователь \"{request.UserId}\" не зарегестрирован. Сначала пройдите регистрацию!");
             }
 
             var post = await _postsRepository.GetAsync(id);
             if (post == null)
             {
-                return StatusCode(400, $"Ошибка: Статья с идентификатором {id} не существует!");
+                return StatusCode(400, $"Ошибка: Статья с идентификатором \"{id}\" не существует!");
             }
                 
             post = _mapper.Map<EditPostRequest, Post>(request, post);
@@ -171,12 +173,12 @@ namespace BlogAPI.Controllers
             var post = await _postsRepository.GetAsync(id);
             if (post == null)
             {
-                return StatusCode(400, $"Ошибка: Статья с идентификатором {id} не существует!");
+                return StatusCode(400, $"Ошибка: Статья с идентификатором \"{id}\" не существует!");
             }
 
             await _postsRepository.DeleteAsync(post);
 
-            return StatusCode(200, $"Статья: с идентификатором: {post.Id} удалена!");
+            return StatusCode(200, $"Статья: с идентификатором: \"{post.Id}\" удалена!");
         }
 
         private async Task<List<Post>> GetAllPostsAsync()

@@ -26,7 +26,7 @@ namespace Blog
         {
             services.AddControllersWithViews();
 
-            //string connection = Configuration.GetConnectionString("DefaultConnecton");
+            //string connection = Configuration.GetConnectionString("DefaultConnection");
             var mapperConfig = new MapperConfiguration((v) =>
             {
                 v.AddProfile(new MappingProfile());
