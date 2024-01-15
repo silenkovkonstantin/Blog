@@ -5,6 +5,6 @@ namespace BlogAPI.Contracts.Models.Users
 {
     public class EditUserRequest : AddUserRequest
     {
-        public List<RoleView> Roles { get; set; }
+        public List<string> Roles { get; set; }
     }
 }

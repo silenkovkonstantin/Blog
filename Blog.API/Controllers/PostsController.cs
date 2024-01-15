@@ -44,13 +44,13 @@ namespace BlogAPI.Controllers
         public async Task<IActionResult> Posts()
         {
             var posts = await GetAllPostsAsync();
-            var request = new GetPostsResponse
+            var response = new GetPostsResponse
             {
                 PostAmount = posts.Count,
                 Posts = _mapper.Map<List<Post>, List<PostView>>(posts)
             };
 
-            return StatusCode(200, request);
+            return StatusCode(200, response);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace BlogAPI.Controllers
         /// <response code="400">If the user is unauthorized</response>
         [HttpPost]
         [Route("[action]")]
-        [Authorize]
+        [Authorize(Roles = "Пользователь")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Add([FromBody] AddPostRequest request)
@@ -126,7 +126,7 @@ namespace BlogAPI.Controllers
         /// <response code="401">If the user is unauthorized</response>
         [HttpPatch]
         [Route("[action]/{id}")]
-        [Authorize]
+        [Authorize(Roles = "Модератор")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Edit([FromRoute] int id, [FromBody] EditPostRequest request)
@@ -165,7 +165,7 @@ namespace BlogAPI.Controllers
         /// <response code="401">If the user is unauthorized</response>
         [HttpDelete]
         [Route("[action]/{id}")]
-        [Authorize]
+        [Authorize(Roles = "Модератор")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Delete([FromRoute] int id)

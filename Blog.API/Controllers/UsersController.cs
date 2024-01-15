@@ -7,6 +7,7 @@ using Blog.Data;
 using Blog.Data.Repository;
 using BlogAPI.Contracts.Models.Users;
 using NuGet.Common;
+using BlogAPI.Contracts.Models.Roles;
 
 namespace BlogAPI.Controllers
 {
@@ -71,20 +72,27 @@ namespace BlogAPI.Controllers
         /// <response code="401">If the user is unauthorized</response>
         [HttpGet]
         [Route("")]
-        [Authorize]
+        [Authorize(Roles = "Администратор")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public IActionResult Users()
+        public async Task<IActionResult> Users()
         {
             var users = _userManager.Users;
-
-            var request = new GetUsersResponse
+            
+            var response = new GetUsersResponse
             {
                 UserAmount = users.Count(),
-                Users = _mapper.Map<IQueryable<User>, List<UserView>>(users)
+                Users = _mapper.Map<IQueryable<User>, List<UserView>>(users),
             };
 
-            return StatusCode(200, request);
+            foreach (var respuser in response.Users)
+            {
+                var user = _mapper.Map<User>(respuser);
+                var roles = await _userManager.GetRolesAsync(user);
+                respuser.Roles = roles.ToList();
+            }
+
+            return StatusCode(200, response);
         }
 
         /// <summary>
@@ -99,7 +107,7 @@ namespace BlogAPI.Controllers
         /// <response code="401">If the user is unauthorized</response>
         [HttpGet]
         [Route("[action]/{id}")]
-        [Authorize]
+        [Authorize(Roles = "Администратор")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> User([FromRoute] string id)
@@ -107,15 +115,12 @@ namespace BlogAPI.Controllers
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
-                return StatusCode(400, $"Ошибка: Пользователь с данным id не найден. Проверьте корректность ввода!");
+                return StatusCode(400, $"Ошибка: Пользователь с \"{id}\" не найден. Проверьте корректность ввода!");
             }
 
-            //var userPosts = await _postsRepository.GetAllByUserIdAsync(id);
-            //user.Posts = userPosts.ToList();
-            //var userComments = await _commentRepository.GetAllByUserIdAsync(id);
-            //user.Comments = userComments.ToList();
-
             var response = _mapper.Map<UserView>(user);
+            var roles = await _userManager.GetRolesAsync(user);
+            response.Roles = roles.ToList();
 
             return StatusCode(200, response);
         }
@@ -132,7 +137,7 @@ namespace BlogAPI.Controllers
         /// <response code="401">If the user is unauthorized</response>
         [HttpPost]
         [Route("[action]")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Администратор")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Add([FromBody] AddUserRequest request)
@@ -144,9 +149,7 @@ namespace BlogAPI.Controllers
                 var result = await _userManager.CreateAsync(user, request.PasswordReg);
                 if (result.Succeeded)
                 {
-                    // Установка куки
                     await _userManager.AddToRoleAsync(user, "Пользователь");
-                    await _signInManager.SignInAsync(user, false);
 
                     return StatusCode(200, $"Пользователь: {request.FirstName} {request.LastName}, добавлен!");
                 }
@@ -177,7 +180,7 @@ namespace BlogAPI.Controllers
         /// <response code="401">If the user is unauthorized</response>
         [HttpPatch]
         [Route("[action]/{id}")]
-        [Authorize]
+        [Authorize(Roles = "Администратор")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Edit([FromRoute] string id, [FromBody] EditUserRequest request)
@@ -185,15 +188,25 @@ namespace BlogAPI.Controllers
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
-                return StatusCode(400, $"Ошибка: Пользователь: {request.Email} не зарегестрирован. Сначало пройдите регистрацию!");
+                return StatusCode(400, $"Ошибка: Пользователь {request.Email} не зарегестрирован. Сначала пройдите регистрацию!");
             }
 
             user = _mapper.Map<EditUserRequest, User>(request, user);
-            var rolesList = request.Roles;
-            await _userManager.AddToRolesAsync(user, request.Roles.Where(r => r.IsChecked == true).Select(r => r.Name));
-            var result = await _userManager.UpdateAsync(user);
+            foreach (var role in request.Roles)
+            {
+                await _userManager.AddToRoleAsync(user, role);
+            }
 
-            return StatusCode(200, $"Данные пользователя: {request.FirstName} {request.LastName}, обновлены!");
+            var result = await _userManager.UpdateAsync(user);
+            
+            if (result.Succeeded)
+            {
+                return StatusCode(200, $"Данные пользователя: {request.FirstName} {request.LastName}, обновлены!");
+            }
+            else
+            {
+                return StatusCode(400, $"Ошибка: Не удалось изменить данные пользователя с идентификаторм \"{id}\"!");
+            }
         }
 
         /// <summary>
@@ -208,7 +221,7 @@ namespace BlogAPI.Controllers
         /// <response code="401">If the user is unauthorized</response>
         [HttpDelete]
         [Route("[action]/{id}")]
-        [Authorize]
+        [Authorize(Roles = "Администратор")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Delete([FromRoute] string id)

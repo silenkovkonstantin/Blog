@@ -34,19 +34,19 @@ namespace BlogAPI.Controllers
         /// <response code="401">If the user is unauthorized</response>
         [HttpGet]
         [Route("")]
-        [Authorize]
+        [Authorize(Roles = "Модератор, Пользователь")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Tags()
         {
             var tags = await GetAllTagsAsync();
-            var request = new GetTagsResponse
+            var response = new GetTagsResponse
             {
                 TagAmount = tags.Count,
                 Tags = _mapper.Map<List<Tag>, List<TagView>>(tags)
             };
 
-            return StatusCode(200, request);
+            return StatusCode(200, response);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace BlogAPI.Controllers
         /// <response code="400">Unable to create the tag due to validation error</response>
         [HttpPost]
         [Route("[action]")]
-        [Authorize]
+        [Authorize(Roles = "Пользователь")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Add([FromBody] AddTagRequest request)
@@ -76,7 +76,7 @@ namespace BlogAPI.Controllers
             var tag = _mapper.Map<Tag>(request);
             await _tagsRepository.CreateAsync(tag);
 
-            return StatusCode(201, $"Комната {request.Name} добавлена!");
+            return StatusCode(201, $"Тег {request.Name} добавлена!");
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace BlogAPI.Controllers
         /// <response code="401">If the user is unauthorized</response>
         [HttpPatch]
         [Route("[action]/{id}")]
-        [Authorize]
+        [Authorize(Roles = "Модератор")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Edit([FromRoute] int id, [FromBody] EditTagRequest request)
@@ -121,7 +121,7 @@ namespace BlogAPI.Controllers
         /// <response code="401">If the user is unauthorized</response>
         [HttpDelete]
         [Route("[action]/{id}")]
-        [Authorize]
+        [Authorize(Roles = "Модератор")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Delete([FromRoute] int id)

@@ -15,14 +15,12 @@ namespace BlogAPI
         {
             CreateMap<User, UserView>().ReverseMap();
             CreateMap<AddUserRequest, User>();
-            CreateMap<Tag, TagView>();
+            CreateMap<Tag, TagView>().ReverseMap();
             CreateMap<AddTagRequest, Tag>();
             CreateMap<EditTagRequest, Tag>();
-            CreateMap<AddPostRequest, Post>()
-                .ForMember(x => x.Tags, opt => opt.MapFrom(src => src.Tags.Where(t => t.IsChecked == true)));
-            CreateMap<EditPostRequest, Post>()
-                .ForMember(x => x.Tags, opt => opt.MapFrom(src => src.Tags.Where(t => t.IsChecked == true)));
-            CreateMap<RoleView, Role>();
+            CreateMap<AddPostRequest, Post>();
+            CreateMap<EditPostRequest, Post>();
+            CreateMap<RoleView, Role>().ReverseMap();
             CreateMap<Post, PostView>();
         }
     }
