@@ -26,7 +26,7 @@ namespace Blog.UnitTests.Controllers
         public PostsControllerTests()
         {
             _mockMapper = new Mock<IMapper>();
-            _mockUserManager = new Mock<UserManager<User>>();
+            _mockUserManager = new Mock<UserManager<User>>(Mock.Of<IUserStore<User>>(), null, null, null, null, null, null, null, null);
             _mockPostsRepository = new Mock<IRepository<Post>>();
             _mockTagsRepository = new Mock<IRepository<Tag>>();
             _mockLogger = new Mock<ILogger<PostsController>>();
@@ -40,7 +40,7 @@ namespace Blog.UnitTests.Controllers
             // Act
             var result = _controller.Posts();
             // Assert
-            Assert.IsType<ViewResult>(result);
+            Assert.IsType<Task<IActionResult>>(result);
         }
     }
 }

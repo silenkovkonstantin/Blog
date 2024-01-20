@@ -1,3 +1,4 @@
+using BlogAPI;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Blog.IntegrationTests.IntegrationTests

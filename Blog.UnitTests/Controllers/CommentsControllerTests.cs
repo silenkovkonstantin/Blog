@@ -16,7 +16,7 @@ namespace Blog.UnitTests.Controllers
 {
     public class CommentsControllerTests
     {
-        private readonly Mock<UserManager<User>> _mockUserManager;
+        private Mock<UserManager<User>> _mockUserManager;
         private readonly Mock<IRepository<Post>> _mockPostsRepository;
         private readonly Mock<ILogger<CommentsController>> _mockLogger;
         private readonly Mock<IRepository<Comment>> _mockCommentsRepository;
@@ -25,7 +25,7 @@ namespace Blog.UnitTests.Controllers
 
         public CommentsControllerTests()
         {
-            _mockUserManager = new Mock<UserManager<User>>();
+            _mockUserManager = new Mock<UserManager<User>>(Mock.Of<IUserStore<User>>(), null, null, null, null, null, null, null, null);
             _mockPostsRepository = new Mock<IRepository<Post>>();
             _mockLogger = new Mock<ILogger<CommentsController>>();
             _mockCommentsRepository = new Mock<IRepository<Comment>>();

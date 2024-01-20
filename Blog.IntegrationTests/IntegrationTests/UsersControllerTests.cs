@@ -1,4 +1,5 @@
-﻿using Blog.ViewModels;
+﻿using BlogAPI;
+using BlogAPI.Contracts.Models.Users;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace Blog.IntegrationTests.IntegrationTests
 {
-    public class AccountManagerControllerTests :
+    public class UsersControllerTests :
         IClassFixture<CustomWebApplicationFactory<Startup>>
     {
         private readonly CustomWebApplicationFactory<Startup> _factory;
         private readonly HttpClient _client;
 
-        public AccountManagerControllerTests(CustomWebApplicationFactory<Startup> factory)
+        public UsersControllerTests(CustomWebApplicationFactory<Startup> factory)
         {
             _factory = factory;
             _client = _factory.CreateClient();
@@ -28,12 +29,12 @@ namespace Blog.IntegrationTests.IntegrationTests
             // Act
             var response = await _client.GetAsync("/Users");
             // Assert
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         private async Task PerformLogin(string username, string password)
         {
-            var user = new LoginViewModel
+            var user = new LoginRequest
             {
                 Email = username,
                 Password = password
@@ -46,9 +47,9 @@ namespace Blog.IntegrationTests.IntegrationTests
         public async Task CanGetUsers()
         {
             // Arrange
-            List<string> expectedResponse = new List<string> { "patrickbateman", "ryangosling", "jasonstatham" };
+            List<string> expectedResponse = new List<string> { "admin111", "moder2", "user3" };
             //Act
-            await PerformLogin("patrickbateman", "123456");
+            await PerformLogin("admin111@example.com", "12345");
             var responseJson = await _client.GetStringAsync("/Users");
             List<string> actualResponse = JsonConvert.DeserializeObject<List<string>>(responseJson);
             // Assert

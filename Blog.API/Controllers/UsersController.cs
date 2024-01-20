@@ -74,11 +74,11 @@ namespace BlogAPI.Controllers
         [Route("")]
         [Authorize(Roles = "Администратор")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Users()
         {
             var users = _userManager.Users;
-            
+
             var response = new GetUsersResponse
             {
                 UserAmount = users.Count(),
