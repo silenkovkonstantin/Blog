@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Blog.Controllers;
-using Blog.Data.UoW;
+using Blog.Data.Models.Db;
+using Blog.Data.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -13,15 +15,17 @@ namespace Blog.UnitTests.Controllers
 {
     public class TagsControllerTests
     {
-        private readonly Mock<IUnitOfWork> _mockUnitOfWork;
         private Mock<IMapper> _mockMapper;
+        private readonly Mock<IRepository<Tag>> _mockTagsRepository;
+        private readonly Mock<ILogger<TagsController>> _mockLogger;
         private readonly TagsController _controller;
 
         public TagsControllerTests()
         {
-            _mockUnitOfWork = new Mock<IUnitOfWork>();
             _mockMapper = new Mock<IMapper>();
-            _controller = new TagsController(_mockMapper.Object, _mockUnitOfWork.Object);
+            _mockTagsRepository = new Mock<IRepository<Tag>>();
+            _mockLogger = new Mock<ILogger<TagsController>>();
+            _controller = new TagsController(_mockMapper.Object, _mockTagsRepository.Object, _mockLogger.Object);
         }
 
         [Fact]
@@ -30,7 +34,7 @@ namespace Blog.UnitTests.Controllers
             // Act
             var result = _controller.Tags();
             // Assert
-            Assert.IsType<ViewResult>(result);
+            Assert.IsType<Task<IActionResult>>(result);
         }
     }
 }

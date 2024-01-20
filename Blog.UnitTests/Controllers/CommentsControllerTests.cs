@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using Blog.Controllers;
-using Blog.Data.UoW;
+using Blog.Data.Models.Db;
+using Blog.Data.Repository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -13,15 +16,22 @@ namespace Blog.UnitTests.Controllers
 {
     public class CommentsControllerTests
     {
-        private readonly Mock<IUnitOfWork> _mockUnitOfWork;
+        private readonly Mock<UserManager<User>> _mockUserManager;
+        private readonly Mock<IRepository<Post>> _mockPostsRepository;
+        private readonly Mock<ILogger<CommentsController>> _mockLogger;
+        private readonly Mock<IRepository<Comment>> _mockCommentsRepository;
         private Mock<IMapper> _mockMapper;
         private readonly CommentsController _controller;
 
         public CommentsControllerTests()
         {
-            _mockUnitOfWork = new Mock<IUnitOfWork>();
+            _mockUserManager = new Mock<UserManager<User>>();
+            _mockPostsRepository = new Mock<IRepository<Post>>();
+            _mockLogger = new Mock<ILogger<CommentsController>>();
+            _mockCommentsRepository = new Mock<IRepository<Comment>>();
             _mockMapper = new Mock<IMapper>();
-            _controller = new CommentsController(_mockMapper.Object, _mockUnitOfWork.Object);
+            _controller = new CommentsController(_mockMapper.Object, _mockUserManager.Object, _mockCommentsRepository.Object,
+                _mockPostsRepository.Object, _mockLogger.Object);
         }
 
         [Fact]
@@ -30,7 +40,7 @@ namespace Blog.UnitTests.Controllers
             // Act
             var result = _controller.Comments();
             // Assert
-            Assert.IsType<ViewResult>(result);
+            Assert.IsType<Task<IActionResult>>(result);
         }
     }
 }

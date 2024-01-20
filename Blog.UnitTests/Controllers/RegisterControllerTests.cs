@@ -4,6 +4,7 @@ using Blog.Data.Models.Db;
 using Blog.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ namespace Blog.UnitTests.Controllers
         private Mock<IMapper> _mockMapperr;
         private readonly Mock<UserManager<User>> _mockUserManager;
         private readonly Mock<SignInManager<User>> _mockSignInManager;
+        private readonly Mock<ILogger<RegisterController>> _mockLogger;
         private readonly RegisterController _controller;
 
         public RegisterControllerTests()
@@ -26,21 +28,24 @@ namespace Blog.UnitTests.Controllers
             _mockMapperr = new Mock<IMapper>();
             _mockUserManager = new Mock<UserManager<User>>();
             _mockSignInManager = new Mock<SignInManager<User>>();
-            _controller = new RegisterController(_mockMapperr.Object, _mockUserManager.Object, _mockSignInManager.Object);
+            _mockLogger = new Mock<ILogger<RegisterController>>();
+            _controller = new RegisterController(_mockMapperr.Object, _mockUserManager.Object, _mockSignInManager.Object, 
+                _mockLogger.Object);
         }
 
         [Fact]
         public void Register_ReturnsBadRequestResult_WhenModelStateIsInvalid()
         {
             // Arrange
-            _controller.ModelState.AddModelError("Login", "Поле Имя обязательно для заполнения");
+            _controller.ModelState.AddModelError("UserName", "Поле Никнейм обязательно для заполнения");
             var formModel = new RegisterViewModel
             {
-                Login = "new_user",
-                EmailReg = "new_user@example.com",
+                FirstName = "Новый",
+                LastName = "Пользователь",
+                UserName = "new_user",
+                Email = "new_user@example.com",
                 PasswordReg = "123",
                 PasswordConfirm = "123",
-                ImageUrl = "https://i.pinimg.com/originals/5c/9c/36/5c9c363f068fd9808161e711257b0946.jpg"
             };
             // Act
             var result = _controller.Register(formModel);
@@ -55,11 +60,12 @@ namespace Blog.UnitTests.Controllers
             // Arrange
             var formModel = new RegisterViewModel
             {
-                Login = "new_user",
-                EmailReg = "new_user@example.com",
+                FirstName = "Новый",
+                LastName = "Пользователь",
+                UserName = "new_user",
+                Email = "new_user@example.com",
                 PasswordReg = "123",
                 PasswordConfirm = "123",
-                ImageUrl = "https://i.pinimg.com/originals/5c/9c/36/5c9c363f068fd9808161e711257b0946.jpg"
             };
             // Act
             var result = _controller.Register(formModel);
