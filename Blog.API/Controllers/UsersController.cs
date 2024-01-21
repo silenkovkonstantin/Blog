@@ -40,7 +40,7 @@ namespace BlogAPI.Controllers
         /// <remarks>
         /// POST /Users/Login
         /// </remarks>
-        /// <param name="model">LoginModel object</param>
+        /// <param name="request">LoginModel object</param>
         /// <returns>Logining in account</returns>
         /// <response code="200">Success</response>
         [Route("[action]")]
@@ -74,7 +74,7 @@ namespace BlogAPI.Controllers
         [Route("")]
         [Authorize(Roles = "Администратор")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Users()
         {
             var users = _userManager.Users;
